@@ -6,7 +6,7 @@ import 'package:pepe/bullet.dart';
 import 'package:pepe/constants.dart';
 
 /// Общий класс вредителя
-class Pest extends RectangleComponent with  CollisionCallbacks {
+class Pest extends RectangleComponent with CollisionCallbacks {
   Pest({
     required double offsetX,
     required double offsetY,
@@ -35,9 +35,42 @@ class Pest extends RectangleComponent with  CollisionCallbacks {
   /// Здоровье
   int health;
 
-  bool win = false;
+  Timer? _timer;
 
-  void moveForward() {
+  bool win = false;
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    print('коллизим');
+
+    if (other is Bullet) {
+      print('дамажем');
+      _handleDamage(other.damage);
+    }
+
+    super.onCollision(intersectionPoints, other);
+  }
+
+  @override
+  FutureOr<void> onLoad() {
+    debugMode = true;
+    priority = 2;
+
+    _timer = Timer(
+      speed,
+      onTick: move,
+      repeat: true,
+    );
+
+    return super.onLoad();
+  }
+
+  @override
+  void update(double dt) {
+    _timer?.update(dt);
+    super.update(dt);
+  }
+
+  void move() {
     if (win) {
       return;
     }
@@ -57,22 +90,5 @@ class Pest extends RectangleComponent with  CollisionCallbacks {
     if (health <= 0) {
       removeFromParent();
     }
-  }
-
-  @override
-  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-
-    if (other is Bullet) {
-      _handleDamage(other.damage);
-    }
-
-    super.onCollision(intersectionPoints, other);
-  }
-
-  @override
-  FutureOr<void> onLoad() {
-    debugMode = true;
-    priority = 2;
-    return super.onLoad();
   }
 }

@@ -3,21 +3,27 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/pest.dart';
+import 'package:pepe/plants_vs_pests_game.dart';
 import 'package:pepe/square.dart';
 import 'package:uuid/uuid.dart';
 
-class Field extends RectangleComponent {
-  Field()
-      : super(
-          position: Vector2(40, 40),
-          size: Vector2(700, 350),
+class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
+  Field({
+    required super.position,
+    required this.rows,
+    required this.columns,
+  }) : super(
+          size: Vector2(
+            columns * blockSize.x,
+            rows * blockSize.y,
+          ),
         );
 
+  final int rows;
+
+  final int columns;
+
   Timer? timer;
-
-  int get numLinesY => (size.y / blockSize.y).floor();
-
-  int get numLinesX => (size.x / blockSize.x).floor();
 
   @override
   FutureOr<void> onLoad() {
@@ -32,8 +38,7 @@ class Field extends RectangleComponent {
 
     timer = Timer(
       1,
-      onTick: () {
-      },
+      onTick: () {},
       repeat: true,
     );
 
@@ -48,18 +53,25 @@ class Field extends RectangleComponent {
   }
 
   void _buildNet() {
-    for (var y = 0; y < numLinesY; y++) {
-      for (var x = 0; x < numLinesX; x++) {
-        final offsetY = y * blockSize.y;
-        final offsetX = x * blockSize.x;
+    for (var row = 0; row < rows; row++) {
+      List<Square> list = [];
 
-        final field = Square(
-          offsetX: offsetX,
-          offsetY: offsetY,
+      for (var column = 0; column < columns; column++) {
+        final offsetY = row * blockSize.y;
+        final offsetX = column * blockSize.x;
+
+        final square = Square(
+          position: Vector2(offsetX, offsetY),
+          column: column,
+          row: row,
         );
 
-        add(field);
+        add(square);
+
+        list.add(square);
       }
+
+      game.squares.add(list);
     }
   }
 }
