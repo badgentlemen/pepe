@@ -10,7 +10,6 @@ import 'package:pepe/square.dart';
 import 'package:pepe/sun.dart';
 
 class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetection {
-
   int sunPower = 100;
 
   int score = 0;
@@ -23,7 +22,15 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
   }
 
   @override
-  FutureOr<void> onLoad() {
+  FutureOr<void> onLoad() async {
+    try {
+      await images.loadAllImages();
+    } catch (e) {
+      print(e);
+    }
+
+
+
     final field = Field(
       position: Vector2(100, 40),
       rows: 5,

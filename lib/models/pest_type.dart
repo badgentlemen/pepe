@@ -1,0 +1,4 @@
+enum PestType {
+  bunny,
+  snail,
+}

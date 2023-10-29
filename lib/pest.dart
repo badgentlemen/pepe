@@ -4,14 +4,18 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:pepe/bullet.dart';
 import 'package:pepe/constants.dart';
+import 'package:pepe/models/pest_animation_type.dart';
+import 'package:pepe/models/pest_type.dart';
+import 'package:pepe/plants_vs_pests_game.dart';
 
 /// Общий класс вредителя
-class Pest extends RectangleComponent with CollisionCallbacks {
+class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGame>, CollisionCallbacks {
   Pest({
     required double offsetX,
     required double offsetY,
     required this.id,
     required this.health,
+    this.type = PestType.bunny,
     this.value = defaultPestValue,
     this.speed = 1,
     this.dodgePercent = 0,
@@ -19,6 +23,8 @@ class Pest extends RectangleComponent with CollisionCallbacks {
           position: Vector2(offsetX, offsetY),
           size: blockSize,
         );
+
+  final PestType type;
 
   /// Идентификатор
   final String id;
@@ -35,9 +41,14 @@ class Pest extends RectangleComponent with CollisionCallbacks {
   /// Здоровье
   int health;
 
+  bool stoped = false;
+
   Timer? _timer;
 
+  late SpriteAnimation idleAnimation;
+
   bool win = false;
+
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     print('коллизим');
@@ -52,8 +63,10 @@ class Pest extends RectangleComponent with CollisionCallbacks {
 
   @override
   FutureOr<void> onLoad() {
+    _loadAllAnimations();
+
     debugMode = true;
-    priority = 2;
+    priority = 1;
 
     _timer = Timer(
       speed,
@@ -71,7 +84,7 @@ class Pest extends RectangleComponent with CollisionCallbacks {
   }
 
   void move() {
-    if (win) {
+    if (win || stoped) {
       return;
     }
 
@@ -90,5 +103,22 @@ class Pest extends RectangleComponent with CollisionCallbacks {
     if (health <= 0) {
       removeFromParent();
     }
+  }
+
+  void _loadAllAnimations() {
+    idleAnimation = SpriteAnimation.fromFrameData(
+      game.images.fromCache('Bunny/Idle (34x44).png'),
+      SpriteAnimationData.sequenced(
+        amount: PestAnimationType.idle.amount,
+        stepTime: speed / PestAnimationType.idle.amount,
+        textureSize: Vector2(34, 44),
+      ),
+    );
+
+    animations = {
+      PestAnimationType.idle: idleAnimation,
+    };
+
+    current = PestAnimationType.idle;
   }
 }

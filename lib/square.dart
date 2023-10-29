@@ -42,7 +42,8 @@ class Square extends RectangleComponent with TapCallbacks, HasGameRef<PlantsVsPe
         id: const Uuid().v4(),
         position: Vector2(0, 0),
         health: 100,
-        fireFrequency: 4,
+        fireFrequency: 1,
+        damage: 90,
       );
 
       add(plant!);

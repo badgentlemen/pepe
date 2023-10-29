@@ -4,6 +4,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:pepe/bullet.dart';
 import 'package:pepe/constants.dart';
+import 'package:pepe/pest.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
 // import 'package:flame/extensions.dart';
 
@@ -33,7 +34,7 @@ class Plant extends SpriteAnimationComponent with HasGameRef<PlantsVsPestsGame>,
   @override
   FutureOr<void> onLoad() async {
     size = blockSize;
-    priority = 2;
+    priority = 1;
     debugMode = true;
 
     _interval = Timer(
@@ -49,6 +50,17 @@ class Plant extends SpriteAnimationComponent with HasGameRef<PlantsVsPestsGame>,
   void update(double dt) {
     _interval?.update(dt);
     super.update(dt);
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+
+    if (other is Pest) {
+      print('pest');
+    }
+
+    // TODO: implement onCollision
+    super.onCollision(intersectionPoints, other);
   }
 
   void fire() {
