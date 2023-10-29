@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:pepe/constants.dart';
+import 'package:pepe/models/pest_type.dart';
 import 'package:pepe/pest.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
 import 'package:pepe/square.dart';
@@ -36,6 +37,7 @@ class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
     final pest2 = Pest(
       id: const Uuid().v4(),
       position: topRightPosition,
+      type: PestType.snail,
     );
 
     add(pest);

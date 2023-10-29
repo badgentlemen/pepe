@@ -1,5 +1,6 @@
 enum PestAnimationType {
   idle,
+  hit,
 }
 
 extension PestAnimationTypeExt on PestAnimationType {
