@@ -20,9 +20,19 @@ class Square extends RectangleComponent with TapCallbacks, HasGameRef<PlantsVsPe
 
   final int column;
 
-  bool canPlant() =>
-      plant == null &&
-      (column == 0 ? true : game.squares[row].sublist(0, column).every((element) => element.plant != null));
+  List<Square> get beforeItems {
+    final columns = game.squares[row];
+
+    try {
+      return columns.sublist(0, column);
+    } catch (e) {
+      return columns;
+    }
+  }
+
+  bool get enemiesPassedPlace => false;
+
+  bool canPlant() => plant == null && (column == 0 ? true : beforeItems.every((element) => element.plant != null));
 
   @override
   void onTapUp(TapUpEvent event) {
@@ -32,7 +42,6 @@ class Square extends RectangleComponent with TapCallbacks, HasGameRef<PlantsVsPe
 
   void addPlant() {
     if (plant != null) {
-
     } else {
       if (!canPlant()) {
         return;

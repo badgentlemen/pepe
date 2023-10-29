@@ -11,19 +11,18 @@ import 'package:pepe/plants_vs_pests_game.dart';
 /// Общий класс вредителя
 class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGame>, CollisionCallbacks {
   Pest({
-    required double offsetX,
-    required double offsetY,
     required this.id,
-    required this.health,
+    required super.position,
+    this.health = defaultHealth,
     this.type = PestType.bunny,
     this.value = defaultPestValue,
     this.speed = 1,
     this.dodgePercent = 0,
   }) : super(
-          position: Vector2(offsetX, offsetY),
           size: blockSize,
         );
 
+  /// Тип вредителя
   final PestType type;
 
   /// Идентификатор

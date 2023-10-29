@@ -23,33 +23,27 @@ class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
 
   final int columns;
 
-  Timer? timer;
-
   @override
   FutureOr<void> onLoad() {
+
+    final topRightPosition = Vector2(size.x - blockSize.x, 0);
+
     final pest = Pest(
       id: const Uuid().v4(),
-      health: 120,
-      offsetX: size.x + blockSize.x,
-      offsetY: 0,
+      position: topRightPosition,
+    );
+
+    final pest2 = Pest(
+      id: const Uuid().v4(),
+      position: topRightPosition,
     );
 
     add(pest);
 
-    timer = Timer(
-      1,
-      onTick: () {},
-      repeat: true,
-    );
+    Future.delayed(Duration(seconds: 3, milliseconds: 200), () => add(pest2));
 
     _buildNet();
     return super.onLoad();
-  }
-
-  @override
-  void update(double dt) {
-    timer?.update(dt);
-    super.update(dt);
   }
 
   void _buildNet() {
