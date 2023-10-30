@@ -17,7 +17,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
     this.health = defaultHealth,
     this.type = PestType.bunny,
     this.value = defaultPestValue,
-    this.speed = 1,
+    this.delay = 5,
     this.dodgePercent = 0,
   }) : super(
           size: blockSize,
@@ -30,7 +30,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
   final String id;
 
   /// Скорость передвижения
-  final double speed;
+  final double delay;
 
   /// Цена за уничтожение
   final int value;
@@ -51,7 +51,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
 
   int step = 0;
 
-  int get xPosition => game.columns - (step + 1);
+  int get xPosition => game.fieldColumns - (step + 1);
 
   // int get yPosition => game.rows / blockSize.x
 
@@ -70,10 +70,10 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
   @override
   FutureOr<void> onLoad() {
     _loadAllAnimations();
-    priority = 1;
+    priority = 2;
 
     _timer = Timer(
-      speed,
+      delay,
       onTick: move,
       repeat: true,
     );
@@ -98,9 +98,6 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
     } else {
       stoped = true;
     }
-
-    print(xPosition);
-    print(position.y);
   }
 
   Future<void> _onHit() async {
@@ -120,7 +117,8 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
 
     if (health <= 0) {
       // TODO: we killed the enemy
-      game.sunPower += value;
+      game.power += value;
+      game.pests.removeWhere((pest) => pest.id == id);
 
       removeFromParent();
     }
@@ -133,7 +131,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
       type: 'Idle',
       size: type.spriteSize,
       amount: PestAnimationType.idle.amount,
-      speed: speed,
+      speed: delay,
     );
 
     _hitAnimation = fetchAmimation(
@@ -142,7 +140,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
       type: 'Hit',
       size: type.spriteSize,
       amount: PestAnimationType.hit.amount,
-      speed: speed,
+      speed: delay,
     );
 
     animations = {

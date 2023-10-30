@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flame/components.dart';
 import 'package:pepe/constants.dart';
@@ -24,28 +25,41 @@ class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
 
   final int columns;
 
+  Timer? _timer;
+
   @override
   FutureOr<void> onLoad() {
-
-    final topRightPosition = Vector2(size.x - blockSize.x, 0);
-
-    final pest = Pest(
-      id: const Uuid().v4(),
-      position: topRightPosition,
-    );
-
-    // final pest2 = Pest(
-    //   id: const Uuid().v4(),
-    //   position: topRightPosition,
-    //   type: PestType.turtle,
-    // );
-
-    add(pest);
-
-    // Future.delayed(Duration(seconds: 3, milliseconds: 200), () => add(pest2));
-
     _buildNet();
+
+    _timer = Timer(1, onTick: _someRandom, repeat: true,);
+
     return super.onLoad();
+  }
+
+  @override
+  void update(double dt) {
+    _timer?.update(dt);
+    super.update(dt);
+  }
+
+  void _sendPestAt(int row, {double delay = 1,}) {
+    final position = Vector2(size.x - blockSize.x, row * blockSize.y);
+    final pest = Pest(id: const Uuid().v4(), position: position, delay: delay,);
+
+    game.pests.add(pest);
+    add(pest);
+  }
+
+
+  void _someRandom() {
+
+    final next = Random().nextDouble();
+
+    if (next > .8) {
+      final randomRow = Random().nextInt(rows);
+      final randomDelay = Random().nextInt(3).toDouble();
+      _sendPestAt(randomRow, delay: randomDelay);
+    }
   }
 
   void _buildNet() {
@@ -67,7 +81,7 @@ class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
         list.add(square);
       }
 
-      game.squares.add(list);
+      game.fieldSquares.add(list);
     }
   }
 }

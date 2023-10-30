@@ -5,20 +5,24 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:pepe/field.dart';
-import 'package:pepe/label.dart';
+import 'package:pepe/pest.dart';
 import 'package:pepe/square.dart';
 import 'package:pepe/sun.dart';
 
 class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetection {
-  int sunPower = 100;
+  /// Сила игрока
+  int power = 100;
 
+  /// Очки игрока
   int score = 0;
 
-  List<List<Square>> squares = [];
+  List<List<Square>> fieldSquares = [];
 
-  final int rows = 5;
+  List<Pest> pests = [];
 
-  final int columns = 10;
+  final int fieldRows = 4;
+
+  final int fieldColumns = 12;
 
   @override
   Color backgroundColor() {
@@ -33,22 +37,24 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
       print(e);
     }
 
+    _addField();
+    _addPrimarySun();
+
+    return super.onLoad();
+  }
+
+  void _addField() {
     final field = Field(
-      position: Vector2(100, 40),
-      rows: rows,
-      columns: columns,
-    );
-    final sun = Sun(position: Vector2(20, 20));
-    final scoreDash = Label(
-      size: Vector2(56, 20),
-      position: Vector2(26, 100),
-      value: score,
+      position: Vector2(100, 150),
+      rows: fieldRows,
+      columns: fieldColumns,
     );
 
     add(field);
-    add(sun);
-    add(scoreDash);
+  }
 
-    return super.onLoad();
+  void _addPrimarySun() {
+    final sun = Sun(position: Vector2(20, 20), looksRight: true);
+    add(sun);
   }
 }

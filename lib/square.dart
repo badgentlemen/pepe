@@ -21,7 +21,7 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
   final int column;
 
   List<Square> get beforeItems {
-    final columns = game.squares[row];
+    final columns = game.fieldSquares[row];
 
     try {
       return columns.sublist(0, column);
@@ -59,9 +59,9 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
     }
   }
 
-  Sprite get flowerSprite => _spriteAt(x: 5, y: 10);
+  Sprite get flowerSprite => _spriteAt(x: 6, y: 10);
 
-  Sprite get grassSpite => _spriteAt(x: 0, y: 4);
+  Sprite get grassSpite => _spriteAt(x: 0, y: 0);
 
   Sprite _spriteAt({required int x, required int y}) {
     final spriteSize = Vector2(16, 16);
