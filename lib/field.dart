@@ -55,7 +55,7 @@ class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
 
     final next = Random().nextDouble();
 
-    if (next > .8) {
+    if (next > .5) {
       final randomRow = Random().nextInt(rows);
       final randomDelay = Random().nextInt(3).toDouble();
       _sendPestAt(randomRow, delay: randomDelay);
