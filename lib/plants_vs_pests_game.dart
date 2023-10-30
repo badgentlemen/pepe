@@ -16,6 +16,10 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
 
   List<List<Square>> squares = [];
 
+  final int rows = 5;
+
+  final int columns = 10;
+
   @override
   Color backgroundColor() {
     return Colors.grey.shade300;
@@ -29,12 +33,10 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
       print(e);
     }
 
-
-
     final field = Field(
       position: Vector2(100, 40),
-      rows: 5,
-      columns: 10,
+      rows: rows,
+      columns: columns,
     );
     final sun = Sun(position: Vector2(20, 20));
     final scoreDash = Label(

@@ -7,7 +7,7 @@ import 'package:pepe/plant.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
 import 'package:uuid/uuid.dart';
 
-class Square extends RectangleComponent with TapCallbacks, HasGameRef<PlantsVsPestsGame> {
+class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPestsGame> {
   Square({
     required super.position,
     required this.column,
@@ -59,9 +59,25 @@ class Square extends RectangleComponent with TapCallbacks, HasGameRef<PlantsVsPe
     }
   }
 
+  Sprite get flowerSprite => _spriteAt(x: 5, y: 10);
+
+  Sprite get grassSpite => _spriteAt(x: 0, y: 4);
+
+  Sprite _spriteAt({required int x, required int y}) {
+    final spriteSize = Vector2(16, 16);
+    final spritePosition = Vector2(x * spriteSize.x, y * spriteSize.y);
+
+    return Sprite(
+      game.images.fromCache('grass.png'),
+      srcPosition: spritePosition,
+      srcSize: Vector2(16, 16),
+    );
+  }
+
   @override
-  FutureOr<void> onLoad() {
-    // debugMode = true;
+  FutureOr<void> onLoad() async {
+    sprite = row.isOdd ? flowerSprite : grassSpite;
+
     priority = 1;
     return super.onLoad();
   }

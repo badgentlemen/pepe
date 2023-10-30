@@ -49,9 +49,11 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
 
   late SpriteAnimation _hitAnimation;
 
-  bool win = false;
-
   int step = 0;
+
+  int get xPosition => game.columns - (step + 1);
+
+  // int get yPosition => game.rows / blockSize.x
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
@@ -68,8 +70,6 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
   @override
   FutureOr<void> onLoad() {
     _loadAllAnimations();
-
-    debugMode = true;
     priority = 1;
 
     _timer = Timer(
@@ -88,31 +88,34 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
   }
 
   void move() {
-    if (win || stoped) {
+    if (stoped) {
       return;
-    }
-
-    if (step.isOdd) {
-      _handleDamage(30);
     }
 
     if (position.x != 0) {
       position.x -= blockSize.x;
       step += 1;
     } else {
-      win = true;
+      stoped = true;
     }
+
+    print(xPosition);
+    print(position.y);
+  }
+
+  Future<void> _onHit() async {
+    _timer?.pause();
+    current = PestAnimationType.hit;
+    await Future.delayed(const Duration(milliseconds: 200));
+
+    _timer?.resume();
+    current = PestAnimationType.idle;
   }
 
   Future<void> _handleDamage(int damage) async {
     if (health > 0) {
-      _timer?.pause();
-      current = PestAnimationType.hit;
       health -= damage;
-      await Future.delayed(Duration(milliseconds: 200));
-
-      _timer?.resume();
-      current = PestAnimationType.idle;
+      await _onHit();
     }
 
     if (health <= 0) {

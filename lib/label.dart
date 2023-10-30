@@ -17,6 +17,8 @@ class Label extends RectangleComponent {
       TextBoxComponent(
         text: value.toString(),
         align: Anchor.center,
+        size: size,
+        position: Vector2(0, 0),
       ),
     );
 
