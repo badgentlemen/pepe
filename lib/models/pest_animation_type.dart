@@ -8,6 +8,8 @@ extension PestAnimationTypeExt on PestAnimationType {
     switch (this) {
       case PestAnimationType.idle:
         return 8;
+      case PestAnimationType.hit:
+        return 5;
       default:
         return 1;
     }

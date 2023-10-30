@@ -34,15 +34,15 @@ class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
       position: topRightPosition,
     );
 
-    final pest2 = Pest(
-      id: const Uuid().v4(),
-      position: topRightPosition,
-      type: PestType.snail,
-    );
+    // final pest2 = Pest(
+    //   id: const Uuid().v4(),
+    //   position: topRightPosition,
+    //   type: PestType.turtle,
+    // );
 
     add(pest);
 
-    Future.delayed(Duration(seconds: 3, milliseconds: 200), () => add(pest2));
+    // Future.delayed(Duration(seconds: 3, milliseconds: 200), () => add(pest2));
 
     _buildNet();
     return super.onLoad();

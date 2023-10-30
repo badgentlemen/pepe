@@ -45,9 +45,13 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
 
   Timer? _timer;
 
-  late SpriteAnimation idleAnimation;
+  late SpriteAnimation _idleAnimation;
+
+  late SpriteAnimation _hitAnimation;
 
   bool win = false;
+
+  int step = 0;
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
@@ -88,25 +92,39 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
       return;
     }
 
+    if (step.isOdd) {
+      _handleDamage(30);
+    }
+
     if (position.x != 0) {
       position.x -= blockSize.x;
+      step += 1;
     } else {
       win = true;
     }
   }
 
-  void _handleDamage(int damage) {
+  Future<void> _handleDamage(int damage) async {
     if (health > 0) {
+      _timer?.pause();
+      current = PestAnimationType.hit;
       health -= damage;
+      await Future.delayed(Duration(milliseconds: 200));
+
+      _timer?.resume();
+      current = PestAnimationType.idle;
     }
 
     if (health <= 0) {
+      // TODO: we killed the enemy
+      game.sunPower += value;
+
       removeFromParent();
     }
   }
 
   void _loadAllAnimations() {
-    idleAnimation = fetchAmimation(
+    _idleAnimation = fetchAmimation(
       images: game.images,
       of: type.title,
       type: 'Idle',
@@ -115,8 +133,18 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
       speed: speed,
     );
 
+    _hitAnimation = fetchAmimation(
+      images: game.images,
+      of: type.title,
+      type: 'Hit',
+      size: type.spriteSize,
+      amount: PestAnimationType.hit.amount,
+      speed: speed,
+    );
+
     animations = {
-      PestAnimationType.idle: idleAnimation,
+      PestAnimationType.idle: _idleAnimation,
+      PestAnimationType.hit: _hitAnimation,
     };
 
     current = PestAnimationType.idle;

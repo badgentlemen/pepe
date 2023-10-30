@@ -14,7 +14,7 @@ SpriteAnimation fetchAmimation({
       images.fromCache('$of/$type (${size.x.toInt()}x${size.y.toInt()}).png'),
       SpriteAnimationData.sequenced(
         amount: amount,
-        stepTime: speed / amount,
+        stepTime: 1 / amount,
         textureSize: size,
       ),
     );
