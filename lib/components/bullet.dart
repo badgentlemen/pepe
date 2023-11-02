@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:pepe/components/pest.dart';
 import 'package:pepe/constants.dart';
 
 /// Общий класс ПУЛЬ
@@ -37,14 +36,6 @@ class Bullet extends RectangleComponent with CollisionCallbacks {
 
     _move();
     return super.onLoad();
-  }
-
-  @override
-  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    if (other is Pest) {
-      removeFromParent();
-    }
-    super.onCollision(intersectionPoints, other);
   }
 
   @override

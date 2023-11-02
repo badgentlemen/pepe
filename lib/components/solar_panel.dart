@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/painting.dart';
-import 'package:pepe/components/solar_panel_hitbox.dart';
+import 'package:pepe/components/solar_panel_polygon.dart';
 import 'package:pepe/components/sun.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/plants_vs_pests_game.dart';

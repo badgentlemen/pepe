@@ -39,12 +39,26 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
   @override
   void onTapUp(TapUpEvent event) {
 
-    addPlant();
+    if (plant == null) {
+      _addPlant();
+    } else {
+      _removePlant();
+    }
 
     super.onTapUp(event);
   }
 
-  void addPlant() {
+  void _removePlant() {
+    if (plant == null) {
+      return;
+    }
+
+    game.increasePower(plant!.costs);
+    plant!.removeFromParent();
+    plant = null;
+  }
+
+  void _addPlant() {
     if (!canPlant()) {
       return;
     }

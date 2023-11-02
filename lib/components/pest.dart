@@ -57,6 +57,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is Bullet) {
       _handleDamage(other.damage);
+      other.removeFromParent();
     }
 
     super.onCollision(intersectionPoints, other);
@@ -99,17 +100,18 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
     }
   }
 
+  Future<void> _onHit() async {
+    current = PestAnimationType.hit;
+
+    await Future.delayed(Duration(seconds: (1 / PestAnimationType.hit.amount).floor()));
+
+    current = PestAnimationType.idle;
+  }
+
   Future<void> _handleDamage(int damage) async {
     if (health > 0) {
       health -= damage;
-      // current = PestAnimationType.hit;
-      // Future.delayed(
-      //   const Duration(seconds: 1),
-      //   () {
-      //     current = PestAnimationType.idle;
-      //   },
-      // );
-      current = PestAnimationType.idle;
+      _onHit();
     }
 
     if (health <= 0) {

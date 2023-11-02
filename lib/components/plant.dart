@@ -75,7 +75,7 @@ class Plant extends SpriteAnimationComponent with HasGameRef<PlantsVsPestsGame>,
 
       game.reducePower(bullet.damage);
 
-      add(bullet);
+      parent?.add(bullet);
     }
   }
 }
