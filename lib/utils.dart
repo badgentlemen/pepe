@@ -2,7 +2,10 @@ import 'dart:math';
 
 import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
-import 'package:pepe/plants_vs_pests_game.dart';
+import 'package:pepe/models/plant_type.dart';
+import 'package:uuid/uuid.dart';
+
+import 'components/plant.dart';
 
 SpriteAnimation fetchAmimation({
   required Images images,
@@ -20,7 +23,6 @@ SpriteAnimation fetchAmimation({
         textureSize: size,
       ),
     );
-
 
 int random(int min, int max) {
   return min + Random().nextInt(max - min);

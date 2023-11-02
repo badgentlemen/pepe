@@ -1,22 +1,28 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
+import 'package:pepe/components/cloud.dart';
 import 'package:pepe/components/field.dart';
-import 'package:pepe/components/hill.dart';
 import 'package:pepe/components/label.dart';
 import 'package:pepe/components/pest.dart';
+import 'package:pepe/components/primary_sun.dart';
+import 'package:pepe/components/solar_panel.dart';
 import 'package:pepe/components/square.dart';
 import 'package:pepe/components/sun.dart';
+import 'package:pepe/constants.dart';
 
-class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetection {
+class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDraggablesBridge {
   /// Сила игрока
-  int power = 200;
+  int power = 1000;
 
   /// Очки игрока
   int score = 0;
+
+  bool primarySunBlocked = false;
 
   List<List<Square>> fieldSquares = [];
 
@@ -28,10 +34,12 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
 
   late TextComponent powerLabel;
 
+  Vector2 get primarySunPosition => Vector2(size.x * .7, 10);
+
+  Timer? _cloudTimer;
+
   @override
-  Color backgroundColor() {
-    return Colors.grey.shade300;
-  }
+  Color backgroundColor() => Colors.black;
 
   @override
   FutureOr<void> onLoad() async {
@@ -48,9 +56,11 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
       ),
     );
 
-    // _addHill();
+    _addSolars();
     _addField();
     _addPrimarySun();
+    _handleClouds();
+    _addPowerSun();
     _addPowerLabel();
 
     return super.onLoad();
@@ -58,12 +68,17 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
 
   @override
   void update(double dt) {
+    _cloudTimer?.update(dt);
     powerLabel.text = power.toString();
     super.update(dt);
   }
 
-  void _addHill() {
-    add(Hill());
+  void _addSolars() {
+    for (var i = 0; i < 4; i++) {
+      final next = Vector2(100 + (i * SolarPanel.defaultSize.x), 360);
+
+      add(SolarPanel(position: next));
+    }
   }
 
   void _addField() {
@@ -76,9 +91,34 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
     add(field);
   }
 
-  void _addPrimarySun() {
-    final sun = Sun(position: Vector2(20, 30), looksRight: true);
+  void _addPowerSun() {
+    final sun = Sun(
+      position: Vector2(20, 30),
+      reversed: true,
+    );
+
     add(sun);
+  }
+
+  void _handleClouds() {
+    _cloudTimer = Timer(
+      cloudFrequency,
+      onTick: () {
+        final random = Random().nextDouble();
+
+        if (random <= 0.2 || random >= 0.8) {
+          final cloud = Cloud(
+              position: Vector2(
+                20,
+                10,
+              ),
+              reversed: random <= .2);
+
+          add(cloud);
+        }
+      },
+      repeat: true,
+    );
   }
 
   void _addPowerLabel() {
@@ -89,5 +129,25 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
     );
 
     add(powerLabel);
+  }
+
+  void _addPrimarySun() {
+    add(PrimarySun());
+  }
+
+  void onPestKill(Pest pest) {
+    increasePower(pest.value);
+    score += pest.value;
+    pests.removeWhere((pest) => pest.id == pest.id);
+  }
+
+  void increasePower(int other) {
+    power += other;
+  }
+
+  void reducePower(int other) {
+    if (power > 0) {
+      power = max(0, power - other);
+    }
   }
 }

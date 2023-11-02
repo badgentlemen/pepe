@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 import 'package:pepe/constants.dart';
-import 'package:pepe/models/pest_type.dart';
 import 'package:pepe/components/pest.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
 import 'package:pepe/components/square.dart';
@@ -38,6 +37,8 @@ class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
       repeat: true,
     );
 
+    _sendPestAt(0);
+
     return super.onLoad();
   }
 
@@ -56,7 +57,7 @@ class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
     final pest = Pest(
       id: const Uuid().v4(),
       position: position,
-      delay: delay,
+      delay: 6,
       health: health,
     );
 
@@ -67,7 +68,7 @@ class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
   void _someRandom() {
     final next = Random().nextDouble();
 
-    if (next > .7) {
+    if (next > .95) {
       final randomRow = Random().nextInt(rows);
       _sendPestAt(randomRow,);
     }

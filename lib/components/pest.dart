@@ -51,12 +51,11 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
 
   int step = 0;
 
+  int get xIndex => ((position.x - blockSize.x) / blockSize.x).floor();
+
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    print('коллизим');
-
     if (other is Bullet) {
-      print('дамажем');
       _handleDamage(other.damage);
     }
 
@@ -67,6 +66,8 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
   FutureOr<void> onLoad() {
     _loadAllAnimations();
     priority = 2;
+
+    add(RectangleHitbox());
 
     _timer = Timer(
       delay,
@@ -91,24 +92,24 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
     if (position.x != 0) {
       step += 1;
       position.x -= blockSize.x;
-    } else {
+    }
+
+    if (position.x <= 0) {
       stoped = true;
     }
-  }
-
-  Future<void> _onHit() async {
-    _timer?.pause();
-    current = PestAnimationType.hit;
-    await Future.delayed(const Duration(milliseconds: 200));
-
-    _timer?.resume();
-    current = PestAnimationType.idle;
   }
 
   Future<void> _handleDamage(int damage) async {
     if (health > 0) {
       health -= damage;
-      await _onHit();
+      // current = PestAnimationType.hit;
+      // Future.delayed(
+      //   const Duration(seconds: 1),
+      //   () {
+      //     current = PestAnimationType.idle;
+      //   },
+      // );
+      current = PestAnimationType.idle;
     }
 
     if (health <= 0) {
@@ -117,12 +118,8 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
   }
 
   void _destroy() {
-    game.power += value;
-    game.pests.removeWhere((pest) => pest.id == id);
-
+    game.onPestKill(this);
     removeFromParent();
-
-    print(game.power);
   }
 
   void _loadAllAnimations() {

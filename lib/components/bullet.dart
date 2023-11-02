@@ -2,22 +2,20 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:pepe/components/pest.dart';
 import 'package:pepe/constants.dart';
 
 /// Общий класс ПУЛЬ
 class Bullet extends RectangleComponent with CollisionCallbacks {
   Bullet({
     required super.position,
-    required double width,
-    required double height,
     required this.damage,
     this.speed = defaultSpeed,
   }) : super(
-          size: Vector2(
-            width,
-            height,
-          ),
+          size: defaultSize,
         );
+
+  static Vector2 defaultSize = Vector2(14, 14);
 
   /// Наносимый урон от пули
   final int damage;
@@ -29,6 +27,8 @@ class Bullet extends RectangleComponent with CollisionCallbacks {
 
   @override
   FutureOr<void> onLoad() {
+    add(RectangleHitbox());
+
     _timer = Timer(
       speed,
       onTick: _move,
@@ -37,6 +37,14 @@ class Bullet extends RectangleComponent with CollisionCallbacks {
 
     _move();
     return super.onLoad();
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    if (other is Pest) {
+      removeFromParent();
+    }
+    super.onCollision(intersectionPoints, other);
   }
 
   @override

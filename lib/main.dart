@@ -27,7 +27,14 @@ class GameApp extends StatelessWidget {
       home: Scaffold(
         body: Stack(
           children: [
-            Image.asset('assets/images/field.png'),
+            Positioned(
+              left: 0,
+              bottom: -120,
+              right: 0,
+              child: Image.asset(
+                'assets/images/field.png',
+              ),
+            ),
             GameWidget(
               game: PlantsVsPestsGame(),
             ),

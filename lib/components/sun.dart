@@ -6,21 +6,21 @@ import 'package:pepe/plants_vs_pests_game.dart';
 class Sun extends SpriteComponent with HasGameRef<PlantsVsPestsGame> {
   Sun({
     required super.position,
-    this.looksRight = false,
-  }) : super(
-          size: Vector2(
-            70,
-            70,
-          ),
-        );
+    this.reversed = false,
+  }) : super(size: defaultSize);
 
-  final bool looksRight;
+  static Vector2 defaultSize = Vector2(
+    70,
+    70,
+  );
+
+  final bool reversed;
 
   @override
   FutureOr<void> onLoad() {
     sprite = Sprite(game.images.fromCache('sun.png'));
 
-    if (looksRight) {
+    if (reversed) {
       flipHorizontallyAroundCenter();
     }
 

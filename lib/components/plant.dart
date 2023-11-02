@@ -5,33 +5,34 @@ import 'package:flame/components.dart';
 import 'package:pepe/components/bullet.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/components/pest.dart';
+import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
+import 'package:uuid/uuid.dart';
 // import 'package:flame/extensions.dart';
 
 class Plant extends SpriteAnimationComponent with HasGameRef<PlantsVsPestsGame>, CollisionCallbacks {
-  Plant({
-    required super.position,
-    required this.id,
-    required this.health,
-    this.fireFrequency = defaultSpeed,
-    this.damage = defaultDamage,
-  });
+  Plant(this.type) : id = const Uuid().v4();
+
+  final PlantType type;
 
   /// Идентификатор растения
   final String id;
 
   /// Уровень жизни растения
-  final int health;
+  int get health => type.health;
 
   /// Наносимый урон
-  final int damage;
+  int get damage => type.damage;
+
+  /// Стоимость
+  int get costs => type.costs;
 
   /// Частота удара + стрельбы
-  final double fireFrequency;
+  double get fireFrequency => type.fireFrequency;
 
   Timer? _interval;
 
-  bool get canHit => game.power >= damage;
+  bool get canFire => game.power >= damage;
 
   @override
   FutureOr<void> onLoad() async {
@@ -65,18 +66,14 @@ class Plant extends SpriteAnimationComponent with HasGameRef<PlantsVsPestsGame>,
   }
 
   void fire() {
-    if (isMounted && canHit) {
-      game.power -= damage;
+    if (isMounted && canFire) {
 
       final bullet = Bullet(
-        position: Vector2(
-          blockSize.x,
-          blockSize.y / 2,
-        ),
-        width: 20,
-        height: 20,
+        position: Vector2(blockSize.x, blockSize.y / 2 - (Bullet.defaultSize.y / 2)),
         damage: damage,
       );
+
+      game.reducePower(bullet.damage);
 
       add(bullet);
     }

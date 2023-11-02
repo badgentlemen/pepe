@@ -17,12 +17,6 @@ class Label extends TextBoxComponent {
   final int value;
 
   @override
-  Future<void> onLoad() {
-    // TODO: implement onLoad
-    return super.onLoad();
-  }
-
-  @override
   void drawBackground(Canvas c) {
     Rect rect = Rect.fromLTWH(0, 0, width, height);
     c.drawRect(

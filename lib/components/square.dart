@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flutter/material.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/components/plant.dart';
+import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
 import 'package:uuid/uuid.dart';
 
@@ -36,27 +38,22 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
 
   @override
   void onTapUp(TapUpEvent event) {
+
     addPlant();
+
     super.onTapUp(event);
   }
 
   void addPlant() {
-    if (plant != null) {
-    } else {
-      if (!canPlant()) {
-        return;
-      }
-
-      plant = Plant(
-        id: const Uuid().v4(),
-        position: Vector2(0, 0),
-        health: 100,
-        fireFrequency: 1,
-        damage: 90,
-      );
-
-      add(plant!);
+    if (!canPlant()) {
+      return;
     }
+
+    plant = Plant(PlantType.peas);
+
+    game.reducePower(plant!.costs);
+
+    add(plant!);
   }
 
   Sprite get row1Sprite => _spriteAt(x: 6, y: 10);
