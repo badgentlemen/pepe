@@ -7,15 +7,19 @@ import 'package:pepe/components/solar_panel_polygon.dart';
 import 'package:pepe/components/sun.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
+import 'package:pepe/utils.dart';
 
 class SolarPanel extends SpriteComponent with HasGameRef<PlantsVsPestsGame> {
   SolarPanel({
+    required this.index,
     required super.position,
     this.frequency = defaultSpeed,
     this.power = defaultPower,
   });
 
   static Vector2 defaultSize = Vector2(70, 45);
+
+  final int index;
 
   final double frequency;
 
@@ -80,6 +84,8 @@ class SolarPanel extends SpriteComponent with HasGameRef<PlantsVsPestsGame> {
   }
 
   void _onSave() {
+    // final powerFromSun =
 
+    print('$index: ${game.size.x / positionFromSun}');
   }
 }

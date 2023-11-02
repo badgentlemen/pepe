@@ -131,7 +131,6 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
       type: 'Idle',
       size: type.spriteSize,
       amount: PestAnimationType.idle.amount,
-      speed: delay,
     );
 
     _hitAnimation = fetchAmimation(
@@ -140,7 +139,6 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
       type: 'Hit',
       size: type.spriteSize,
       amount: PestAnimationType.hit.amount,
-      speed: delay,
     );
 
     animations = {

@@ -77,7 +77,12 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
     for (var i = 0; i < 4; i++) {
       final next = Vector2(100 + (i * SolarPanel.defaultSize.x), 360);
 
-      add(SolarPanel(position: next));
+      add(
+        SolarPanel(
+          position: next,
+          index: i + 1,
+        ),
+      );
     }
   }
 

@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:pepe/constants.dart';
+import 'package:pepe/plants_vs_pests_game.dart';
 
 /// Общий класс ПУЛЬ
-class Bullet extends RectangleComponent with CollisionCallbacks {
+class Bullet extends SpriteComponent with CollisionCallbacks, HasGameRef<PlantsVsPestsGame> {
   Bullet({
     required super.position,
     required this.damage,
@@ -14,7 +15,7 @@ class Bullet extends RectangleComponent with CollisionCallbacks {
           size: defaultSize,
         );
 
-  static Vector2 defaultSize = Vector2(14, 14);
+  static Vector2 defaultSize = Vector2(18, 18);
 
   /// Наносимый урон от пули
   final int damage;
@@ -26,6 +27,10 @@ class Bullet extends RectangleComponent with CollisionCallbacks {
 
   @override
   FutureOr<void> onLoad() {
+    sprite = Sprite(
+      game.images.fromCache('Bullet.png'),
+    );
+
     add(RectangleHitbox());
 
     _timer = Timer(

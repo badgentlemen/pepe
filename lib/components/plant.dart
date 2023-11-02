@@ -7,10 +7,15 @@ import 'package:pepe/constants.dart';
 import 'package:pepe/components/pest.dart';
 import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
+import 'package:pepe/utils.dart';
 import 'package:uuid/uuid.dart';
 // import 'package:flame/extensions.dart';
 
-class Plant extends SpriteAnimationComponent with HasGameRef<PlantsVsPestsGame>, CollisionCallbacks {
+enum PlantAnimationType {
+  idle,
+}
+
+class Plant extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGame>, CollisionCallbacks {
   Plant(this.type) : id = const Uuid().v4();
 
   final PlantType type;
@@ -38,7 +43,18 @@ class Plant extends SpriteAnimationComponent with HasGameRef<PlantsVsPestsGame>,
   FutureOr<void> onLoad() async {
     size = blockSize;
     priority = 1;
-    debugMode = true;
+
+    animations = {
+      PlantAnimationType.idle: fetchAmimation(
+        images: game.images,
+        of: 'Plant',
+        type: 'Idle',
+        size: Vector2(44, 42),
+        amount: 11,
+      ),
+    };
+
+    current = PlantAnimationType.idle;
 
     _interval = Timer(
       fireFrequency,
@@ -67,7 +83,6 @@ class Plant extends SpriteAnimationComponent with HasGameRef<PlantsVsPestsGame>,
 
   void fire() {
     if (isMounted && canFire) {
-
       final bullet = Bullet(
         position: Vector2(blockSize.x, blockSize.y / 2 - (Bullet.defaultSize.y / 2)),
         damage: damage,
@@ -75,7 +90,7 @@ class Plant extends SpriteAnimationComponent with HasGameRef<PlantsVsPestsGame>,
 
       game.reducePower(bullet.damage);
 
-      parent?.add(bullet);
+      add(bullet);
     }
   }
 }
