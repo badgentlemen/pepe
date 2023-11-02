@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
@@ -18,3 +20,8 @@ SpriteAnimation fetchAmimation({
         textureSize: size,
       ),
     );
+
+
+int random(int min, int max) {
+  return min + Random().nextInt(max - min);
+}

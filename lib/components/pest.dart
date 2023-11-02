@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:pepe/bullet.dart';
+import 'package:pepe/components/bullet.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/models/pest_animation_type.dart';
 import 'package:pepe/models/pest_type.dart';
@@ -22,6 +22,10 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
   }) : super(
           size: blockSize,
         );
+
+  late SpriteAnimation _idleAnimation;
+
+  late SpriteAnimation _hitAnimation;
 
   /// Тип вредителя
   final PestType type;
@@ -45,15 +49,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
 
   Timer? _timer;
 
-  late SpriteAnimation _idleAnimation;
-
-  late SpriteAnimation _hitAnimation;
-
   int step = 0;
-
-  int get xPosition => game.fieldColumns - (step + 1);
-
-  // int get yPosition => game.rows / blockSize.x
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
@@ -93,8 +89,8 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
     }
 
     if (position.x != 0) {
-      position.x -= blockSize.x;
       step += 1;
+      position.x -= blockSize.x;
     } else {
       stoped = true;
     }
@@ -116,12 +112,17 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
     }
 
     if (health <= 0) {
-      // TODO: we killed the enemy
-      game.power += value;
-      game.pests.removeWhere((pest) => pest.id == id);
-
-      removeFromParent();
+      _destroy();
     }
+  }
+
+  void _destroy() {
+    game.power += value;
+    game.pests.removeWhere((pest) => pest.id == id);
+
+    removeFromParent();
+
+    print(game.power);
   }
 
   void _loadAllAnimations() {

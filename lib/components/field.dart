@@ -4,9 +4,10 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/models/pest_type.dart';
-import 'package:pepe/pest.dart';
+import 'package:pepe/components/pest.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
-import 'package:pepe/square.dart';
+import 'package:pepe/components/square.dart';
+import 'package:pepe/utils.dart';
 import 'package:uuid/uuid.dart';
 
 class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
@@ -31,7 +32,11 @@ class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
   FutureOr<void> onLoad() {
     _buildNet();
 
-    _timer = Timer(1, onTick: _someRandom, repeat: true,);
+    _timer = Timer(
+      1,
+      onTick: _someRandom,
+      repeat: true,
+    );
 
     return super.onLoad();
   }
@@ -42,23 +47,29 @@ class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
     super.update(dt);
   }
 
-  void _sendPestAt(int row, {double delay = 1,}) {
+  void _sendPestAt(
+    int row, {
+    double delay = 1,
+  }) {
     final position = Vector2(size.x - blockSize.x, row * blockSize.y);
-    final pest = Pest(id: const Uuid().v4(), position: position, delay: delay,);
+    final health = random(70, 120);
+    final pest = Pest(
+      id: const Uuid().v4(),
+      position: position,
+      delay: delay,
+      health: health,
+    );
 
     game.pests.add(pest);
     add(pest);
   }
 
-
   void _someRandom() {
-
     final next = Random().nextDouble();
 
-    if (next > .5) {
+    if (next > .7) {
       final randomRow = Random().nextInt(rows);
-      final randomDelay = Random().nextInt(3).toDouble();
-      _sendPestAt(randomRow, delay: randomDelay);
+      _sendPestAt(randomRow,);
     }
   }
 

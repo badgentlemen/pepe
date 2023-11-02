@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:pepe/constants.dart';
-import 'package:pepe/plant.dart';
+import 'package:pepe/components/plant.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
 import 'package:uuid/uuid.dart';
 
@@ -59,9 +59,9 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
     }
   }
 
-  Sprite get flowerSprite => _spriteAt(x: 6, y: 10);
+  Sprite get row1Sprite => _spriteAt(x: 6, y: 10);
 
-  Sprite get grassSpite => _spriteAt(x: 0, y: 0);
+  Sprite get row0Sprite => _spriteAt(x: 7, y: 3);
 
   Sprite _spriteAt({required int x, required int y}) {
     final spriteSize = Vector2(16, 16);
@@ -76,7 +76,7 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
 
   @override
   FutureOr<void> onLoad() async {
-    sprite = row.isOdd ? flowerSprite : grassSpite;
+    sprite = row.isOdd ? row1Sprite : row0Sprite;
 
     priority = 1;
     return super.onLoad();
