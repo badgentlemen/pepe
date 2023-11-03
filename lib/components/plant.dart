@@ -4,7 +4,6 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:pepe/components/bullet.dart';
 import 'package:pepe/constants.dart';
-import 'package:pepe/components/pest.dart';
 import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
 import 'package:pepe/utils.dart';
@@ -85,16 +84,6 @@ class Plant extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsG
     // }
 
     super.update(dt);
-  }
-
-  @override
-  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    if (other is Pest) {
-      print('pest');
-    }
-
-    // TODO: implement onCollision
-    super.onCollision(intersectionPoints, other);
   }
 
   void fire() {

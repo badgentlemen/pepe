@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flutter/material.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/components/plant.dart';
 import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
-import 'package:uuid/uuid.dart';
 
 class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPestsGame> {
   Square({

@@ -1,5 +1,4 @@
 import 'package:flame/components.dart';
-import 'package:pepe/models/pest_animation_type.dart';
 
 enum PestType {
   bunny,

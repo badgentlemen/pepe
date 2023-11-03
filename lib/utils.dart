@@ -2,11 +2,7 @@ import 'dart:math';
 
 import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
-import 'package:pepe/components/solar_panel.dart';
-import 'package:pepe/models/plant_type.dart';
-import 'package:uuid/uuid.dart';
 
-import 'components/plant.dart';
 
 SpriteAnimation fetchAmimation({
   required Images images,
@@ -16,8 +12,6 @@ SpriteAnimation fetchAmimation({
   required int amount,
 }) {
   final path = '$of/$type (${size.x.toInt()}x${size.y.toInt()}).png';
-
-  print(path);
 
   return SpriteAnimation.fromFrameData(
     images.fromCache(path),
