@@ -16,8 +16,6 @@ class TimeProgressBar extends ShapeComponent with HasGameRef<PlantsVsPestsGame> 
 
   @override
   Future<void> onLoad() async {
-    debugMode = true;
-
     size = Vector2(game.timingWidth, game.blockSize / 5);
     position = Vector2(game.size.x - game.timingWidth - game.blockSize * .8, game.size.y - (game.blockSize * 1.7));
 

@@ -36,6 +36,8 @@ class PlantCard extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
         0,
       );
 
+  Vector2 get infoFieldSize => Vector2(size.x, game.blockSize / 2.2);
+
   TextBoxComponent? countLabel;
 
   @override
@@ -54,6 +56,7 @@ class PlantCard extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
     _addInfoField();
     _addPicture();
     _addCountLabel();
+    _addPlantGrassCard();
 
     return super.onLoad();
   }
@@ -66,7 +69,6 @@ class PlantCard extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
   }
 
   void _addInfoField() {
-    final infoFieldSize = Vector2(size.x, game.blockSize / 2.2);
     final infoFieldPosition = Vector2(0, size.y - infoFieldSize.y);
     final costsTextSize = fetchTextSizeByStyle(costs, FlameText.textStyle);
     final sunSize = Vector2(infoFieldSize.y, infoFieldSize.y);
@@ -112,4 +114,19 @@ class PlantCard extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
   }
 
   void _addPicture() {}
+
+  void _addPlantGrassCard() {
+    final grassCardSize = Vector2(24, 24);
+
+    add(
+      SpriteComponent(
+        sprite: type.fetchSprite(game.images),
+        position: Vector2(
+          size.x - grassCardSize.x,
+          size.y - grassCardSize.y - infoFieldSize.y,
+        ),
+        size: grassCardSize,
+      ),
+    );
+  }
 }

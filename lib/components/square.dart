@@ -24,7 +24,7 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
 
   bool get canBuy => game.sunPower > plantType.costs;
 
-  bool get canPlant => _plant == null;
+  bool get canPlant => _plant == null && canBuy;
 
   @override
   void onTapUp(TapUpEvent event) {
@@ -47,39 +47,11 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
     add(_plant!);
   }
 
-  Sprite get potatoSprite => _spriteAt(x: 19, y: 0, size: 3);
-
-  Sprite get wheatSprite => _spriteAt(x: 13, y: 0, size: 3);
-
-  Sprite get buckwheatSprite => _spriteAt(x: 10, y: 0, size: 3);
-
-  Sprite _spriteAt({required int x, required int y, int size = 1,}) {
-    final spriteSize = Vector2(16.0, 16.0);
-    final spritePosition = Vector2(x * spriteSize.x, y * spriteSize.y);
-
-    return Sprite(
-      game.images.fromCache('grass.png'),
-      srcPosition: spritePosition,
-      srcSize: Vector2(16.0 * size, 16.0 * size),
-    );
-  }
-
   @override
   FutureOr<void> onLoad() async {
     size = Vector2(game.blockSize, game.blockSize);
 
-    switch (plantType) {
-      case PlantType.watermelon:
-        sprite = buckwheatSprite;
-        break;
-      case PlantType.carrot:
-        sprite = potatoSprite;
-        break;
-      case PlantType.corn:
-      default:
-        sprite = wheatSprite;
-    }
-
+    sprite = plantType.fetchSprite(game.images);
 
     priority = 1;
     return super.onLoad();

@@ -46,15 +46,13 @@ class Plant extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsG
     priority = 1;
 
     animations = {
-      PlantAnimationType.idle: fetchAmimation(
-        images: game.images,
+      PlantAnimationType.idle: fetchAmimation(game.images,
         of: 'Plant',
         type: 'Idle',
         size: Vector2(44, 42),
         amount: 11,
       ),
-      PlantAnimationType.fire: fetchAmimation(
-        images: game.images,
+      PlantAnimationType.fire: fetchAmimation(game.images,
         of: 'Plant',
         type: 'Attack',
         size: Vector2(44, 42),

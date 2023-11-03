@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
+import 'package:pepe/components/airplane.dart';
 import 'package:pepe/components/cloud.dart';
 import 'package:pepe/components/field.dart';
 import 'package:pepe/components/label.dart';
@@ -14,7 +15,7 @@ import 'package:pepe/components/primary_sun.dart';
 import 'package:pepe/components/solar_panel.dart';
 import 'package:pepe/components/square.dart';
 import 'package:pepe/components/sun.dart';
-import 'package:pepe/components/timing_progress_bar.dart';
+import 'package:pepe/components/time_progress_bar.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/models/plant_type.dart';
 
@@ -75,6 +76,10 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
     } catch (e) {
       print(e);
     }
+
+    add(
+      Airplane(position: Vector2(0, 0), width: blockSize * 1.5),
+    );
 
     _addSolars();
     _addField();

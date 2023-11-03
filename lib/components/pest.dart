@@ -127,16 +127,14 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
   }
 
   void _loadAllAnimations() {
-    _idleAnimation = fetchAmimation(
-      images: game.images,
+    _idleAnimation = fetchAmimation(game.images,
       of: type.title,
       type: 'Idle',
       size: type.spriteSize,
       amount: PestAnimationType.idle.amount,
     );
 
-    _hitAnimation = fetchAmimation(
-      images: game.images,
+    _hitAnimation = fetchAmimation(game.images,
       of: type.title,
       type: 'Hit',
       size: type.spriteSize,

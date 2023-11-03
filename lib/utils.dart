@@ -4,8 +4,8 @@ import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
-SpriteAnimation fetchAmimation({
-  required Images images,
+SpriteAnimation fetchAmimation(
+  Images images, {
   required String of,
   required String type,
   required Vector2 size,
@@ -22,6 +22,23 @@ SpriteAnimation fetchAmimation({
     ),
   );
 }
+
+Sprite fetchGrassAt(
+  Images images, {
+  required int x,
+  required int y,
+  int size = 1,
+}) {
+  final spriteSize = Vector2(16.0, 16.0);
+  final spritePosition = Vector2(x * spriteSize.x, y * spriteSize.y);
+
+  return Sprite(
+    images.fromCache('grass.png'),
+    srcPosition: spritePosition,
+    srcSize: Vector2(16.0 * size, 16.0 * size),
+  );
+}
+
 
 int random(int min, int max) {
   return min + Random().nextInt(max - min);
