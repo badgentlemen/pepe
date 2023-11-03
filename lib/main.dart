@@ -26,15 +26,17 @@ class GameApp extends StatelessWidget {
       ),
       home: Scaffold(
         body: Stack(
+          fit: StackFit.expand,
           children: [
-            Positioned(
-              left: 0,
-              bottom: -120,
-              right: 0,
-              child: Image.asset(
-                'assets/images/field.png',
-              ),
-            ),
+            // Positioned(
+            //   left: 0,
+            //   bottom: -120,
+            //   right: 0,
+            //   child: Image.asset(
+            //     'assets/images/field.png',
+            //     fit: BoxFit.cover,
+            //   ),
+            // ),
             GameWidget(
               game: PlantsVsPestsGame(),
             ),

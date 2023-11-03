@@ -31,8 +31,6 @@ class Bullet extends SpriteComponent with CollisionCallbacks, HasGameRef<PlantsV
       game.images.fromCache('Bullet.png'),
     );
 
-    add(RectangleHitbox());
-
     _timer = Timer(
       speed,
       onTick: _move,
@@ -47,6 +45,12 @@ class Bullet extends SpriteComponent with CollisionCallbacks, HasGameRef<PlantsV
   void update(double dt) {
     _timer?.update(dt);
     super.update(dt);
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    // TODO: implement onCollision
+    super.onCollision(intersectionPoints, other);
   }
 
   void _move() {

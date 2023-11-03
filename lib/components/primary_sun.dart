@@ -6,20 +6,21 @@ import 'package:pepe/components/cloud.dart';
 import 'package:pepe/components/sun.dart';
 
 class PrimarySun extends Sun with CollisionCallbacks {
-  PrimarySun() : super(position: Vector2.zero());
+  PrimarySun() : super(position: Vector2.zero(), size: Vector2.zero());
 
   @override
   FutureOr<void> onLoad() {
     position = game.primarySunPosition;
+    size = game.primarySunSize;
 
-    add(RectangleHitbox());
+    add(CircleHitbox());
     return super.onLoad();
   }
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is Cloud) {
-      game.primarySunBlocked = true;
+      game.isSunBlocked = true;
     }
 
     super.onCollision(intersectionPoints, other);
@@ -28,7 +29,7 @@ class PrimarySun extends Sun with CollisionCallbacks {
   @override
   void onCollisionEnd(PositionComponent other) {
     if (other is Cloud) {
-      game.primarySunBlocked = false;
+      game.isSunBlocked = false;
     }
 
     super.onCollisionEnd(other);

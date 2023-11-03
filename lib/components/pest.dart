@@ -19,9 +19,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
     this.value = defaultPestValue,
     this.delay = 5,
     this.dodgePercent = 0,
-  }) : super(
-          size: blockSize,
-        );
+  });
 
   late SpriteAnimation _idleAnimation;
 
@@ -53,7 +51,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
 
   int step = 0;
 
-  int get xIndex => ((position.x - blockSize.x) / blockSize.x).floor();
+  int get xIndex => ((position.x - game.blockSize) / game.blockSize).floor();
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
@@ -67,6 +65,8 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
 
   @override
   FutureOr<void> onLoad() {
+    size = Vector2(game.blockSize, game.blockSize);
+
     _loadAllAnimations();
     priority = 2;
 
@@ -94,7 +94,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
 
     if (position.x != 0) {
       step += 1;
-      position.x -= blockSize.x;
+      position.x -= game.blockSize;
     }
 
     if (position.x <= 0) {

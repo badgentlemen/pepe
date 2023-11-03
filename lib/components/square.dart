@@ -2,19 +2,22 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:pepe/constants.dart';
 import 'package:pepe/components/plant.dart';
 import 'package:pepe/models/plant_type.dart';
+import 'package:pepe/models/square_type.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
 
 class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPestsGame> {
   Square({
     required super.position,
+    required this.type,
     required this.column,
     required this.row,
-  }) : super(size: blockSize);
+  });
 
   Plant? plant;
+
+  final SquareType type;
 
   final int row;
 
@@ -36,24 +39,11 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
 
   @override
   void onTapUp(TapUpEvent event) {
-
     if (plant == null) {
       _addPlant();
-    } else {
-      _removePlant();
     }
 
     super.onTapUp(event);
-  }
-
-  void _removePlant() {
-    if (plant == null) {
-      return;
-    }
-
-    game.increaseSunPower(plant!.costs);
-    plant!.removeFromParent();
-    plant = null;
   }
 
   void _addPlant() {
@@ -61,31 +51,46 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
       return;
     }
 
-    plant = Plant(PlantType.peas);
+    plant = Plant(PlantType.pepper);
 
     game.reduceSunPower(plant!.costs);
 
     add(plant!);
   }
 
-  Sprite get row1Sprite => _spriteAt(x: 6, y: 10);
+  Sprite get potatoSprite => _spriteAt(x: 19, y: 0, size: 3);
 
-  Sprite get row0Sprite => _spriteAt(x: 7, y: 3);
+  Sprite get wheatSprite => _spriteAt(x: 13, y: 0, size: 3);
 
-  Sprite _spriteAt({required int x, required int y}) {
-    final spriteSize = Vector2(16, 16);
+  Sprite get buckwheatSprite => _spriteAt(x: 10, y: 0, size: 3);
+
+  Sprite _spriteAt({required int x, required int y, int size = 1,}) {
+    final spriteSize = Vector2(16.0, 16.0);
     final spritePosition = Vector2(x * spriteSize.x, y * spriteSize.y);
 
     return Sprite(
       game.images.fromCache('grass.png'),
       srcPosition: spritePosition,
-      srcSize: Vector2(16, 16),
+      srcSize: Vector2(16.0 * size, 16.0 * size),
     );
   }
 
   @override
   FutureOr<void> onLoad() async {
-    sprite = row.isOdd ? row1Sprite : row0Sprite;
+    size = Vector2(game.blockSize, game.blockSize);
+
+    switch (type) {
+      case SquareType.buckwheat:
+        sprite = buckwheatSprite;
+        break;
+      case SquareType.potato:
+        sprite = potatoSprite;
+        break;
+      case SquareType.wheat:
+      default:
+        sprite = wheatSprite;
+    }
+
 
     priority = 1;
     return super.onLoad();

@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
-
+import 'package:flutter/material.dart';
 
 SpriteAnimation fetchAmimation({
   required Images images,
@@ -25,4 +25,23 @@ SpriteAnimation fetchAmimation({
 
 int random(int min, int max) {
   return min + Random().nextInt(max - min);
+}
+
+Size fetchTextSizeByStyle(
+  String text,
+  TextStyle style, {
+  double minWidth = 0,
+  double maxWidth = double.infinity,
+  int maxLines = 1,
+}) {
+  final textPainter = TextPainter(
+    text: TextSpan(
+      text: text,
+      style: style,
+    ),
+    textDirection: TextDirection.ltr,
+    maxLines: maxLines,
+  )..layout(maxWidth: maxWidth, minWidth: minWidth);
+
+  return textPainter.size;
 }

@@ -14,6 +14,20 @@ class Label extends TextBoxComponent {
   final int value;
 
   @override
+  Future<void> onLoad() {
+    textRenderer = TextPaint(
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.orange.shade400,
+        fontSize: 16,
+        height: 1,
+      ),
+    );
+
+    return super.onLoad();
+  }
+
+  @override
   void drawBackground(Canvas c) {
     Rect rect = Rect.fromLTWH(0, 0, width, height);
     c.drawRect(
@@ -21,7 +35,7 @@ class Label extends TextBoxComponent {
         Paint()
           ..style = PaintingStyle.stroke
           ..strokeWidth = 2
-          ..color = Colors.black);
+          ..color = Colors.orange.shade400);
 
     super.drawBackground(c);
   }

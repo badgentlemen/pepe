@@ -6,13 +6,10 @@ import 'package:pepe/plants_vs_pests_game.dart';
 class Sun extends SpriteComponent with HasGameRef<PlantsVsPestsGame> {
   Sun({
     required super.position,
+    required super.size,
     this.reversed = false,
-  }) : super(size: defaultSize);
-
-  static Vector2 defaultSize = Vector2(
-    70,
-    70,
-  );
+    super.priority,
+  });
 
   final bool reversed;
 

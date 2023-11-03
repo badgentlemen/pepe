@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
-import 'package:pepe/components/solar_panel_polygon.dart';
 import 'package:pepe/components/sun.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
@@ -10,11 +9,11 @@ class SolarPanel extends SpriteComponent with HasGameRef<PlantsVsPestsGame> {
   SolarPanel({
     required this.index,
     required super.position,
-    this.frequency = defaultSpeed,
-    this.power = defaultPower,
+    this.frequency = defaultSolarPanelFrequency,
+    this.power = defaultSolarPanelPower,
   });
 
-  static Vector2 defaultSize = Vector2(70, 45);
+  static const aspectRatio = 70 / 45;
 
   final int index;
 
@@ -24,46 +23,39 @@ class SolarPanel extends SpriteComponent with HasGameRef<PlantsVsPestsGame> {
 
   Timer? _timer;
 
+  Sun? _sun;
+
   bool get forwardToSun => game.primarySunPosition.x > position.x;
-
-  SolarPanelPolygon? _checkPolygon;
-
-  int get positionFromSun {
-    double margin = 0;
-
-    if (forwardToSun) {
-      margin = game.primarySunPosition.x - (position.x + size.x);
-    } else {
-      margin = game.primarySunPosition.x + Sun.defaultSize.x - position.x;
-    }
-
-    return margin.abs().floor();
-  }
 
   @override
   FutureOr<void> onLoad() {
-    size = defaultSize;
+    size = game.solarPanelSize;
+
     sprite = Sprite(
       game.images.fromCache('solar_panel.png'),
     );
 
-    _addHitboxPolygon();
     _runMovingTimer();
+
+    _addSun();
 
     return super.onLoad();
   }
 
-  void _addHitboxPolygon() {
-    _checkPolygon = SolarPanelPolygon(
-      [
-        Vector2(position.x, position.y),
-        Vector2(game.primarySunPosition.x, game.primarySunPosition.y),
-        Vector2(game.primarySunPosition.x + Sun.defaultSize.x, game.primarySunPosition.y + Sun.defaultSize.y),
-        Vector2(position.x + size.x, position.y + size.y),
-      ],
+  void _addSun() {
+    final sunSize = Vector2(size.x / 2.5, size.x / 2.5);
+    final sunPosition = Vector2(
+      size.x / 2 - sunSize.x / 2,
+      size.y / 2 - sunSize.y / 2,
     );
 
-    parent?.add(_checkPolygon!);
+    _sun = Sun(
+      position: sunPosition,
+      size: sunSize,
+      reversed: true,
+    );
+
+    add(_sun!);
   }
 
   void _runMovingTimer() {
@@ -77,10 +69,14 @@ class SolarPanel extends SpriteComponent with HasGameRef<PlantsVsPestsGame> {
   @override
   void update(double dt) {
     _timer?.update(dt);
+    _sun?.setOpacity(game.isSunBlocked ? 0 : 1);
+
     super.update(dt);
   }
 
   void _onSave() {
-
+    if (!game.isSunBlocked) {
+      game.increaseSunPower(power);
+    }
   }
 }

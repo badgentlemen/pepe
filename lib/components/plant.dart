@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:pepe/components/bullet.dart';
-import 'package:pepe/constants.dart';
 import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
 import 'package:pepe/utils.dart';
@@ -42,7 +41,8 @@ class Plant extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsG
 
   @override
   FutureOr<void> onLoad() async {
-    size = blockSize;
+    size = Vector2(game.blockSize, game.blockSize);
+
     priority = 1;
 
     animations = {
@@ -89,7 +89,7 @@ class Plant extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsG
   void fire() {
     if (isMounted && canFire) {
       final bullet = Bullet(
-        position: Vector2(blockSize.x, blockSize.y / 2 - (Bullet.defaultSize.y / 2)),
+        position: Vector2(game.blockSize, game.blockSize / 2 - (Bullet.defaultSize.y / 2)),
         damage: damage,
       );
       add(bullet);

@@ -2,42 +2,35 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flame/components.dart';
-import 'package:pepe/constants.dart';
 import 'package:pepe/components/pest.dart';
+import 'package:pepe/models/square_type.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
 import 'package:pepe/components/square.dart';
 import 'package:pepe/utils.dart';
 import 'package:uuid/uuid.dart';
 
+const int fieldRows = 6;
+const int fieldColumns = 15;
+
 class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
-  Field({
-    required super.position,
-    required this.rows,
-    required this.columns,
-  }) : super(
-          size: Vector2(
-            columns * blockSize.x,
-            rows * blockSize.y,
-          ),
-        );
-
-  final int rows;
-
-  final int columns;
+  Field();
 
   Timer? _timer;
 
   @override
   FutureOr<void> onLoad() {
+    size = Vector2(fieldColumns * game.blockSize, fieldRows * game.blockSize);
+    position = Vector2(game.dashboardPosition.x, game.size.y - (game.blockSize * 2.2) - size.y);
+
     _buildNet();
 
     _timer = Timer(
       1,
-      onTick: _someRandom,
+      // onTick: _someRandom,
       repeat: true,
     );
 
-    _sendPestAt(0);
+    // _sendPestAt(0);
 
     return super.onLoad();
   }
@@ -48,11 +41,8 @@ class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
     super.update(dt);
   }
 
-  void _sendPestAt(
-    int row, {
-    double delay = 1,
-  }) {
-    final position = Vector2(size.x - blockSize.x, row * blockSize.y);
+  void _sendPestAt(int row) {
+    final position = Vector2(size.x - game.blockSize, row * game.blockSize);
     final health = random(70, 120);
     final pest = Pest(
       id: const Uuid().v4(),
@@ -69,21 +59,26 @@ class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
     final next = Random().nextDouble();
 
     if (next > .95) {
-      final randomRow = Random().nextInt(rows);
-      _sendPestAt(randomRow,);
+      final randomRow = Random().nextInt(fieldRows);
+      _sendPestAt(
+        randomRow,
+      );
     }
   }
 
   void _buildNet() {
-    for (var row = 0; row < rows; row++) {
+    for (var row = 0; row < fieldRows; row++) {
       List<Square> list = [];
 
-      for (var column = 0; column < columns; column++) {
-        final offsetY = row * blockSize.y;
-        final offsetX = column * blockSize.x;
+      for (var column = 0; column < fieldColumns; column++) {
+        final offsetY = row * game.blockSize;
+        final offsetX = column * game.blockSize;
+
+        final randomType = SquareType.values[Random().nextInt(SquareType.values.length)];
 
         final square = Square(
           position: Vector2(offsetX, offsetY),
+          type: randomType,
           column: column,
           row: row,
         );

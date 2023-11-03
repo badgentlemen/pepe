@@ -9,37 +9,64 @@ import 'package:pepe/components/cloud.dart';
 import 'package:pepe/components/field.dart';
 import 'package:pepe/components/label.dart';
 import 'package:pepe/components/pest.dart';
+import 'package:pepe/components/plant_card.dart';
 import 'package:pepe/components/primary_sun.dart';
 import 'package:pepe/components/solar_panel.dart';
 import 'package:pepe/components/square.dart';
 import 'package:pepe/components/sun.dart';
+import 'package:pepe/components/timing_progress_bar.dart';
 import 'package:pepe/constants.dart';
+import 'package:pepe/models/plant_type.dart';
+
+const double resolutionAspect = 2319 / 1307;
 
 class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDraggablesBridge {
   /// Собранная сила солнца
   int sunPower = 1000;
 
   /// Собранная сила ветра
-  int windPower = 1000;
+  int windPower = 100;
 
-  bool primarySunBlocked = false;
+  bool isSunBlocked = false;
 
   List<List<Square>> fieldSquares = [];
 
   List<Pest> pests = [];
 
-  final int fieldRows = 4;
+  final int fieldRows = 6;
 
-  final int fieldColumns = 12;
+  final int fieldColumns = 15;
+
+  final int solarPanels = 3;
+
+  double get blockSize => size.x / 22;
 
   late TextComponent powerLabel;
 
-  Vector2 get primarySunPosition => Vector2(size.x * .7, 10);
+  Vector2 get dashboardPosition => Vector2(blockSize * 3, 5);
+
+  Vector2 get skyPosition => Vector2(dashboardPosition.x, blockSize * 2);
+
+  Vector2 get primarySunPosition => Vector2(size.x - primarySunSize.x, skyPosition.y);
+
+  Vector2 get primarySunSize => Vector2(blockSize * 2.2, blockSize * 2.2);
+
+  Vector2 get solarPanelSize => Vector2(blockSize * 1.5, (blockSize * 1.5) / SolarPanel.aspectRatio);
+
+  Vector2 get solarPanelPosition => Vector2(dashboardPosition.x, size.y - blockSize - solarPanelSize.y);
+
+  double get cloudWidth => blockSize * 2.2;
+
+  double get plantCardWidth => blockSize * 1.6;
+
+  double get plantCardHeight => plantCardWidth / plantCardRatio;
+
+  double get timingWidth => size.x / 4;
 
   Timer? _cloudTimer;
 
   @override
-  Color backgroundColor() => Colors.black;
+  Color backgroundColor() => Colors.transparent;
 
   @override
   FutureOr<void> onLoad() async {
@@ -49,19 +76,34 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
       print(e);
     }
 
-    add(
-      TextComponent(
-        text: 'ИГРОВОЕ ПОЛЕ',
-        position: Vector2(5, 5),
-      ),
-    );
-
     _addSolars();
     _addField();
     _addPrimarySun();
     _handleClouds();
     _addPowerSun();
     _addPowerLabel();
+
+    add(PlantCard(
+      position: Vector2(
+        dashboardPosition.x,
+        dashboardPosition.y,
+      ),
+      type: PlantType.watermelon,
+    ));
+    add(PlantCard(
+      position: Vector2(dashboardPosition.x + plantCardWidth + 10, dashboardPosition.y),
+      type: PlantType.corn,
+    ));
+    add(PlantCard(
+      position: Vector2(dashboardPosition.x + (plantCardWidth + 10) * 2, dashboardPosition.y),
+      type: PlantType.carrot,
+    ));
+    add(PlantCard(
+      position: Vector2(dashboardPosition.x + (plantCardWidth + 10) * 3, dashboardPosition.y),
+      type: PlantType.pepper,
+    ));
+
+    add(TimingProgressBar(percentage: 90));
 
     return super.onLoad();
   }
@@ -74,8 +116,8 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
   }
 
   void _addSolars() {
-    for (var i = 0; i < 4; i++) {
-      final next = Vector2(100 + (i * SolarPanel.defaultSize.x), 360);
+    for (var i = 0; i < solarPanels; i++) {
+      final next = Vector2(solarPanelPosition.x + (i * solarPanelSize.x), solarPanelPosition.y);
 
       add(
         SolarPanel(
@@ -87,18 +129,14 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
   }
 
   void _addField() {
-    final field = Field(
-      position: Vector2(100, 100),
-      rows: fieldRows,
-      columns: fieldColumns,
-    );
-
+    final field = Field();
     add(field);
   }
 
   void _addPowerSun() {
     final sun = Sun(
-      position: Vector2(20, 30),
+      position: Vector2(blockSize, 10),
+      size: Vector2(blockSize * 1.4, blockSize * 1.4),
       reversed: true,
     );
 
@@ -106,24 +144,25 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
   }
 
   void _handleClouds() {
+    void sendCloud() {
+      final cloud = Cloud();
+
+      add(cloud);
+    }
+
     _cloudTimer = Timer(
       cloudFrequency,
       onTick: () {
         final random = Random().nextDouble();
 
-        if (random <= 0.2 || random >= 0.8) {
-          final cloud = Cloud(
-              position: Vector2(
-                20,
-                10,
-              ),
-              reversed: random <= .2);
-
-          add(cloud);
+        if (random <= .2) {
+          sendCloud();
         }
       },
       repeat: true,
     );
+
+    sendCloud();
   }
 
   void _addPowerLabel() {
