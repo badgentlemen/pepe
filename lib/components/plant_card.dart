@@ -18,9 +18,23 @@ class PlantCard extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
 
   String get costs => type.costs.toString();
 
-  int get countWeCanBuy => (game.sunPower / type.costs).ceil();
+  int get countWeCanBuy => (game.sunPower / type.costs).floor();
 
   String get countWeCanBuyString => countWeCanBuy.toString();
+
+  TextStyle get countLabelTextStyle => const TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 18,
+        height: 1,
+        color: Colors.black,
+      );
+
+  Size get countLabelTextSize => fetchTextSizeByStyle(countWeCanBuyString, countLabelTextStyle);
+
+  Vector2 get countLabelPosition => Vector2(
+        size.x - countLabelTextSize.width - 14,
+        0,
+      );
 
   TextBoxComponent? countLabel;
 
@@ -47,6 +61,7 @@ class PlantCard extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
   @override
   void update(double dt) {
     countLabel?.text = countWeCanBuyString;
+    countLabel?.position = countLabelPosition;
     super.update(dt);
   }
 
@@ -86,21 +101,10 @@ class PlantCard extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
   }
 
   void _addCountLabel() {
-    const textStyle = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 20,
-      height: 1,
-      color: Colors.black,
-    );
-
-    final textSize = fetchTextSizeByStyle(countWeCanBuyString, textStyle);
     countLabel = TextBoxComponent(
       text: countWeCanBuyString,
-      textRenderer: TextPaint(style: textStyle),
-      position: Vector2(
-        size.x - textSize.width - 14,
-        0,
-      ),
+      textRenderer: TextPaint(style: countLabelTextStyle),
+      position: countLabelPosition,
       priority: 4,
     );
 

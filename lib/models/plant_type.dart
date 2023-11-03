@@ -9,9 +9,6 @@ enum PlantType {
 
   /// кукуруза
   corn,
-
-  /// перец
-  pepper,
 }
 
 extension PlantTypeExt on PlantType {
@@ -29,8 +26,6 @@ extension PlantTypeExt on PlantType {
         return 150;
       case PlantType.carrot:
         return 200;
-      case PlantType.pepper:
-        return 300;
     }
   }
 

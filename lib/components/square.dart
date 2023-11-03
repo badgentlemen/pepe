@@ -4,42 +4,31 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:pepe/components/plant.dart';
 import 'package:pepe/models/plant_type.dart';
-import 'package:pepe/models/square_type.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
 
 class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPestsGame> {
   Square({
     required super.position,
-    required this.type,
+    required this.plantType,
     required this.column,
     required this.row,
   });
 
-  Plant? plant;
+  Plant? _plant;
 
-  final SquareType type;
+  final PlantType plantType;
 
   final int row;
 
   final int column;
 
-  List<Square> get beforeItems {
-    final columns = game.fieldSquares[row];
+  bool get canBuy => game.sunPower > plantType.costs;
 
-    try {
-      return columns.sublist(0, column);
-    } catch (e) {
-      return columns;
-    }
-  }
-
-  bool get enemiesPassedPlace => false;
-
-  bool canPlant() => plant == null && (column == 0 ? true : beforeItems.every((element) => element.plant != null));
+  bool get canPlant => _plant == null;
 
   @override
   void onTapUp(TapUpEvent event) {
-    if (plant == null) {
+    if (_plant == null) {
       _addPlant();
     }
 
@@ -47,15 +36,15 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
   }
 
   void _addPlant() {
-    if (!canPlant()) {
+    if (!canPlant) {
       return;
     }
 
-    plant = Plant(PlantType.pepper);
+    _plant = Plant(PlantType.corn);
 
-    game.reduceSunPower(plant!.costs);
+    game.reduceSunPower(_plant!.costs);
 
-    add(plant!);
+    add(_plant!);
   }
 
   Sprite get potatoSprite => _spriteAt(x: 19, y: 0, size: 3);
@@ -79,14 +68,14 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
   FutureOr<void> onLoad() async {
     size = Vector2(game.blockSize, game.blockSize);
 
-    switch (type) {
-      case SquareType.buckwheat:
+    switch (plantType) {
+      case PlantType.watermelon:
         sprite = buckwheatSprite;
         break;
-      case SquareType.potato:
+      case PlantType.carrot:
         sprite = potatoSprite;
         break;
-      case SquareType.wheat:
+      case PlantType.corn:
       default:
         sprite = wheatSprite;
     }

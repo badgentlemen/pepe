@@ -22,7 +22,7 @@ const double resolutionAspect = 2319 / 1307;
 
 class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDraggablesBridge {
   /// Собранная сила солнца
-  int sunPower = 1000;
+  int sunPower = 100;
 
   /// Собранная сила ветра
   int windPower = 100;
@@ -82,28 +82,9 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
     _handleClouds();
     _addPowerSun();
     _addPowerLabel();
+    _addPlantCards();
 
-    add(PlantCard(
-      position: Vector2(
-        dashboardPosition.x,
-        dashboardPosition.y,
-      ),
-      type: PlantType.watermelon,
-    ));
-    add(PlantCard(
-      position: Vector2(dashboardPosition.x + plantCardWidth + 10, dashboardPosition.y),
-      type: PlantType.corn,
-    ));
-    add(PlantCard(
-      position: Vector2(dashboardPosition.x + (plantCardWidth + 10) * 2, dashboardPosition.y),
-      type: PlantType.carrot,
-    ));
-    add(PlantCard(
-      position: Vector2(dashboardPosition.x + (plantCardWidth + 10) * 3, dashboardPosition.y),
-      type: PlantType.pepper,
-    ));
-
-    add(TimingProgressBar(percentage: 90));
+    add(TimeProgressBar(percentage: 90));
 
     return super.onLoad();
   }
@@ -113,6 +94,19 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
     _cloudTimer?.update(dt);
     powerLabel.text = sunPower.toString();
     super.update(dt);
+  }
+
+  void _addPlantCards() {
+    for (var i = 0; i < PlantType.values.length; i++) {
+      final type = PlantType.values[i];
+
+      add(
+        PlantCard(
+          position: Vector2(dashboardPosition.x + (plantCardWidth + 10) * i, dashboardPosition.y),
+          type: type,
+        ),
+      );
+    }
   }
 
   void _addSolars() {

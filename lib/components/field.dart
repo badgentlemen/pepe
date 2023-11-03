@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 import 'package:pepe/components/pest.dart';
-import 'package:pepe/models/square_type.dart';
+import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
 import 'package:pepe/components/square.dart';
 import 'package:pepe/utils.dart';
@@ -74,11 +74,11 @@ class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
         final offsetY = row * game.blockSize;
         final offsetX = column * game.blockSize;
 
-        final randomType = SquareType.values[Random().nextInt(SquareType.values.length)];
+        final randomType = PlantType.values[Random().nextInt(PlantType.values.length)];
 
         final square = Square(
           position: Vector2(offsetX, offsetY),
-          type: randomType,
+          plantType: randomType,
           column: column,
           row: row,
         );
