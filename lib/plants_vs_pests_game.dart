@@ -16,11 +16,11 @@ import 'package:pepe/components/sun.dart';
 import 'package:pepe/constants.dart';
 
 class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDraggablesBridge {
-  /// Сила игрока
-  int power = 1000;
+  /// Собранная сила солнца
+  int sunPower = 1000;
 
-  /// Очки игрока
-  int score = 0;
+  /// Собранная сила ветра
+  int windPower = 1000;
 
   bool primarySunBlocked = false;
 
@@ -69,7 +69,7 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
   @override
   void update(double dt) {
     _cloudTimer?.update(dt);
-    powerLabel.text = power.toString();
+    powerLabel.text = sunPower.toString();
     super.update(dt);
   }
 
@@ -128,7 +128,7 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
 
   void _addPowerLabel() {
     powerLabel = Label(
-      value: power,
+      value: sunPower,
       size: Vector2(80, 20),
       position: Vector2(15, 100),
     );
@@ -141,18 +141,27 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
   }
 
   void onPestKill(Pest pest) {
-    increasePower(pest.value);
-    score += pest.value;
+    increaseSunPower(pest.value);
     pests.removeWhere((pest) => pest.id == pest.id);
   }
 
-  void increasePower(int other) {
-    power += other;
+  void increaseSunPower(int other) {
+    sunPower += other;
   }
 
-  void reducePower(int other) {
-    if (power > 0) {
-      power = max(0, power - other);
+  void reduceSunPower(int other) {
+    if (sunPower > 0) {
+      sunPower = max(0, sunPower - other);
+    }
+  }
+
+  void increaseWindPower(int other) {
+    windPower += other;
+  }
+
+  void reduceWindPower(int other) {
+    if (windPower > 0) {
+      windPower = max(0, windPower - other);
     }
   }
 }

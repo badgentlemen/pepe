@@ -13,11 +13,13 @@ import 'package:uuid/uuid.dart';
 
 enum PlantAnimationType {
   idle,
+  fire,
 }
 
 class Plant extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGame>, CollisionCallbacks {
   Plant(this.type) : id = const Uuid().v4();
 
+  /// Тип растения
   final PlantType type;
 
   /// Идентификатор растения
@@ -37,7 +39,7 @@ class Plant extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsG
 
   Timer? _interval;
 
-  bool get canFire => game.power >= damage;
+  bool get canFire => true;
 
   @override
   FutureOr<void> onLoad() async {
@@ -51,6 +53,13 @@ class Plant extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsG
         type: 'Idle',
         size: Vector2(44, 42),
         amount: 11,
+      ),
+      PlantAnimationType.fire: fetchAmimation(
+        images: game.images,
+        of: 'Plant',
+        type: 'Attack',
+        size: Vector2(44, 42),
+        amount: 8,
       ),
     };
 
@@ -68,6 +77,13 @@ class Plant extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsG
   @override
   void update(double dt) {
     _interval?.update(dt);
+
+    // if (canFire) {
+    //   current = PlantAnimationType.fire;
+    // } else {
+    //   current = PlantAnimationType.idle;
+    // }
+
     super.update(dt);
   }
 
@@ -87,9 +103,6 @@ class Plant extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsG
         position: Vector2(blockSize.x, blockSize.y / 2 - (Bullet.defaultSize.y / 2)),
         damage: damage,
       );
-
-      game.reducePower(bullet.damage);
-
       add(bullet);
     }
   }

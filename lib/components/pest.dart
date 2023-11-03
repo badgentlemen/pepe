@@ -45,7 +45,9 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
   /// Здоровье
   int health;
 
-  bool stoped = false;
+  bool isStopped = false;
+
+  bool isSlowDown = false;
 
   Timer? _timer;
 
@@ -71,7 +73,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
     add(RectangleHitbox());
 
     _timer = Timer(
-      delay,
+      isSlowDown ? delay * 1.5 : delay,
       onTick: move,
       repeat: true,
     );
@@ -86,7 +88,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
   }
 
   void move() {
-    if (stoped) {
+    if (isStopped) {
       return;
     }
 
@@ -96,7 +98,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGa
     }
 
     if (position.x <= 0) {
-      stoped = true;
+      isStopped = true;
     }
   }
 

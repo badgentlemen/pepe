@@ -53,7 +53,7 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
       return;
     }
 
-    game.increasePower(plant!.costs);
+    game.increaseSunPower(plant!.costs);
     plant!.removeFromParent();
     plant = null;
   }
@@ -65,7 +65,7 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
 
     plant = Plant(PlantType.peas);
 
-    game.reducePower(plant!.costs);
+    game.reduceSunPower(plant!.costs);
 
     add(plant!);
   }

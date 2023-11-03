@@ -16,6 +16,6 @@ extension PlantTypeExt on PlantType {
   int get costs => defaultPlantCosts;
 
   /// Частота удара + стрельбы
-  double get fireFrequency => 1;
+  double get fireFrequency => 4;
 }
 

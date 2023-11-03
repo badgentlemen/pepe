@@ -15,7 +15,7 @@ class Bullet extends SpriteComponent with CollisionCallbacks, HasGameRef<PlantsV
           size: defaultSize,
         );
 
-  static Vector2 defaultSize = Vector2(18, 18);
+  static Vector2 defaultSize = Vector2(28, 28);
 
   /// Наносимый урон от пули
   final int damage;
