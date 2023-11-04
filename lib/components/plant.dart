@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:pepe/components/bullet.dart';
+import 'package:pepe/constants.dart';
 import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
 import 'package:uuid/uuid.dart';
@@ -82,8 +83,9 @@ class Plant extends SpriteComponent with HasGameRef<PlantsVsPestsGame>, Collisio
   void fire() {
     if (isMounted && canFire) {
       final bullet = Bullet(
-        position: Vector2(game.blockSize, game.blockSize / 2 - (Bullet.defaultSize.y / 2)),
+        position: Vector2(game.blockSize, game.blockSize / 2 - (bulletRadius / 2)),
         damage: damage,
+        color: type.color,
       );
       add(bullet);
     }

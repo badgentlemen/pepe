@@ -8,6 +8,7 @@ const int defaultPlantCosts = 150;
 const double cloudFrequency = 8;
 const double defaultSpeed = 1;
 
+const double bulletRadius = 10;
 
 const plantCardRatio = 170 / 220;
 const cloudAssetRatio = 958 / 641;

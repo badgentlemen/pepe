@@ -22,7 +22,7 @@ const double resolutionAspect = 2319 / 1307;
 
 class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDraggablesBridge {
   /// Собранная сила солнца
-  int sunPower = 100;
+  int sunPower = 2000;
 
   /// Собранная сила ветра
   int windPower = 100;

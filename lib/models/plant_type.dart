@@ -1,5 +1,6 @@
 import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/utils.dart';
 
@@ -15,6 +16,17 @@ enum PlantType {
 }
 
 extension PlantTypeExt on PlantType {
+  Color get color {
+    switch (this) {
+      case PlantType.carrot:
+        return Colors.orange.shade400;
+      case PlantType.corn:
+        return Colors.yellow.shade400;
+      case PlantType.watermelon:
+        return Colors.red.shade600;
+    }
+  }
+
   double get spiteAspectRatio {
     switch (this) {
       case PlantType.carrot:

@@ -2,20 +2,20 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
 
 /// Общий класс ПУЛЬ
-class Bullet extends SpriteComponent with CollisionCallbacks, HasGameRef<PlantsVsPestsGame> {
+class Bullet extends CircleComponent with CollisionCallbacks, HasGameRef<PlantsVsPestsGame> {
   Bullet({
     required super.position,
     required this.damage,
+    required this.color,
     this.speed = defaultSpeed,
-  }) : super(
-          size: defaultSize,
-        );
+  }) : super(radius: bulletRadius);
 
-  static Vector2 defaultSize = Vector2(28, 28);
+  final Color color;
 
   /// Наносимый урон от пули
   final int damage;
@@ -26,10 +26,12 @@ class Bullet extends SpriteComponent with CollisionCallbacks, HasGameRef<PlantsV
   Timer? _timer;
 
   @override
-  FutureOr<void> onLoad() {
-    sprite = Sprite(
-      game.images.fromCache('Bullet.png'),
-    );
+  Future<void> onLoad() async {
+
+    paintLayers = [
+      Paint()..color = color,
+      Paint()..style = PaintingStyle.stroke..color = Colors.black..strokeWidth = 2,
+    ];
 
     add(RectangleHitbox());
 
@@ -56,6 +58,6 @@ class Bullet extends SpriteComponent with CollisionCallbacks, HasGameRef<PlantsV
   }
 
   void _move() {
-    position.x += size.x;
+    position.x += width;
   }
 }
