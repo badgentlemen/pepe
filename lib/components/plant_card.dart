@@ -22,6 +22,21 @@ class PlantCard extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
 
   String get countWeCanBuyString => countWeCanBuy.toString();
 
+  double get payloadBlockHeight => height - infoFieldSize.y;
+
+  double get avatarAspectWidth {
+    switch (type) {
+      case PlantType.carrot:
+        return .65;
+      case PlantType.corn:
+        return .9;
+      case PlantType.watermelon:
+        return .7;
+    }
+  }
+
+  Vector2 get avatarSize => type.aspectSize(width * avatarAspectWidth);
+
   TextStyle get countLabelTextStyle => const TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 18,
@@ -54,7 +69,7 @@ class PlantCard extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
     ];
 
     _addInfoField();
-    _addPicture();
+    _addAvatar();
     _addCountLabel();
     _addPlantGrassCard();
 
@@ -113,17 +128,25 @@ class PlantCard extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
     add(countLabel!);
   }
 
-  void _addPicture() {}
+  void _addAvatar() {
+    add(
+      SpriteComponent(
+        sprite: type.fetchSprite(game.images),
+        size: avatarSize,
+        position: Vector2(width / 2 - avatarSize.x / 2, payloadBlockHeight / 2 - avatarSize.y / 2,)
+      ),
+    );
+  }
 
   void _addPlantGrassCard() {
     final grassCardSize = Vector2(24, 24);
 
     add(
       SpriteComponent(
-        sprite: type.fetchSprite(game.images),
+        sprite: type.fetchGrassSprite(game.images),
         position: Vector2(
           size.x - grassCardSize.x,
-          size.y - grassCardSize.y - infoFieldSize.y,
+          payloadBlockHeight - grassCardSize.y,
         ),
         size: grassCardSize,
       ),

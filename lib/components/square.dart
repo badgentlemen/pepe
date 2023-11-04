@@ -40,7 +40,7 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
       return;
     }
 
-    _plant = Plant(PlantType.corn);
+    _plant = Plant(plantType);
 
     game.reduceSunPower(_plant!.costs);
 
@@ -49,9 +49,9 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPests
 
   @override
   FutureOr<void> onLoad() async {
-    size = Vector2(game.blockSize, game.blockSize);
 
-    sprite = plantType.fetchSprite(game.images);
+    size = Vector2(game.blockSize, game.blockSize);
+    sprite = plantType.fetchGrassSprite(game.images);
 
     priority = 1;
     return super.onLoad();

@@ -23,7 +23,7 @@ const double resolutionAspect = 2319 / 1307;
 
 class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDraggablesBridge {
   /// Собранная сила солнца
-  int sunPower = 100;
+  int sunPower = 1000;
 
   /// Собранная сила ветра
   int windPower = 100;
@@ -56,7 +56,7 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
 
   Vector2 get solarPanelPosition => Vector2(dashboardPosition.x, size.y - blockSize - solarPanelSize.y);
 
-  double get cloudWidth => blockSize * 2.2;
+  double get cloudWidth => blockSize * 1.6;
 
   double get plantCardWidth => blockSize * 1.6;
 

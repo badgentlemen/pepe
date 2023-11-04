@@ -14,7 +14,7 @@ enum PlantAnimationType {
   fire,
 }
 
-class Plant extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGame>, CollisionCallbacks {
+class Plant extends SpriteComponent with HasGameRef<PlantsVsPestsGame>, CollisionCallbacks {
   Plant(this.type) : id = const Uuid().v4();
 
   /// Тип растения
@@ -41,26 +41,13 @@ class Plant extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsG
 
   @override
   FutureOr<void> onLoad() async {
-    size = Vector2(game.blockSize, game.blockSize);
+    size = type.aspectSize(game.blockSize);
+    position = Vector2(width / 2 - size.x / 2, height / 2 - size.y / 2);
+    sprite = type.fetchSprite(game.images);
+
+    debugMode = true;
 
     priority = 1;
-
-    animations = {
-      PlantAnimationType.idle: fetchAmimation(game.images,
-        of: 'Plant',
-        type: 'Idle',
-        size: Vector2(44, 42),
-        amount: 11,
-      ),
-      PlantAnimationType.fire: fetchAmimation(game.images,
-        of: 'Plant',
-        type: 'Attack',
-        size: Vector2(44, 42),
-        amount: 8,
-      ),
-    };
-
-    current = PlantAnimationType.idle;
 
     _interval = Timer(
       fireFrequency,
@@ -74,13 +61,6 @@ class Plant extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsG
   @override
   void update(double dt) {
     _interval?.update(dt);
-
-    // if (canFire) {
-    //   current = PlantAnimationType.fire;
-    // } else {
-    //   current = PlantAnimationType.idle;
-    // }
-
     super.update(dt);
   }
 

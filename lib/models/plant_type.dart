@@ -1,5 +1,6 @@
 import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
+import 'package:flame/extensions.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/utils.dart';
 
@@ -15,7 +16,20 @@ enum PlantType {
 }
 
 extension PlantTypeExt on PlantType {
-  Sprite fetchSprite(Images gameImages) {
+  double get spiteAspectRatio {
+    switch (this) {
+      case PlantType.carrot:
+        return carrotAssetRatio;
+      case PlantType.corn:
+        return cornAssetRatio;
+      case PlantType.watermelon:
+        return watermelonAssetRatio;
+    }
+  }
+
+  Vector2 aspectSize(double width) => Vector2(width, width * spiteAspectRatio);
+
+  Sprite fetchGrassSprite(Images gameImages) {
     switch (this) {
       case PlantType.watermelon:
         return fetchGrassAt(gameImages, x: 10, y: 0, size: 3);
@@ -24,6 +38,17 @@ extension PlantTypeExt on PlantType {
       case PlantType.corn:
       default:
         return fetchGrassAt(gameImages, x: 13, y: 0, size: 3);
+    }
+  }
+
+  Sprite fetchSprite(Images gameImages) {
+    switch (this) {
+      case PlantType.corn:
+        return Sprite(gameImages.fromCache('corn.png'));
+      case PlantType.carrot:
+        return Sprite(gameImages.fromCache('carrot.png'));
+      case PlantType.watermelon:
+        return Sprite(gameImages.fromCache('watermelon.png'));
     }
   }
 
@@ -50,4 +75,3 @@ extension PlantTypeExt on PlantType {
   /// Время перехода из зерна в полноценное растение
   int get growingUpTimeSec => 3;
 }
-
