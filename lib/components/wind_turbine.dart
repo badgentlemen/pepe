@@ -25,6 +25,7 @@ class WindTurbine extends SpriteComponent with HasGameRef<P2PGame> {
 
   @override
   FutureOr<void> onLoad() {
+    priority = 2;
     size = game.windTurbineSize;
     sprite = Sprite(game.images.fromCache('wind_turbine.png'));
 

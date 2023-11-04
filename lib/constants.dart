@@ -13,6 +13,8 @@ const int fieldColumns = 15;
 const int solarPanels = 3;
 const int windTurbines = 3;
 
+const fieldAssetRatio = 1025 / 272;
+
 const plantCardRatio = 170 / 220;
 const cloudAssetRatio = 958 / 641;
 const carrotAssetRatio = 580 / 539;

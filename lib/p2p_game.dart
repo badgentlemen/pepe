@@ -41,10 +41,14 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
   Vector2 get generatorSize => Vector2(blockSize, blockSize * generatorAssetRatio);
   Vector2 get generatorPosition => Vector2(size.x - blockSize - generatorSize.x, powerSunPosition.y);
 
-  Vector2 get powerSunSize => Vector2(blockSize * 1.4, blockSize * 1.4);
-  Vector2 get powerSunPosition => Vector2(blockSize, 10);
+  Vector2 get powerLabelSize => Vector2(80, 20);
+  Vector2 get powerLabelPosition =>
+      Vector2(dashboardPosition.x / 2 - powerLabelSize.x / 2, powerSunPosition.y + powerSunSize.y + 10);
 
-  Vector2 get dashboardPosition => Vector2(blockSize * 3, 5);
+  Vector2 get powerSunSize => Vector2(blockSize * 1.4, blockSize * 1.4);
+  Vector2 get powerSunPosition => Vector2(dashboardPosition.x / 2 - powerSunSize.x / 2, 10);
+
+  Vector2 get dashboardPosition => Vector2(blockSize * 2.7, 5);
 
   Vector2 get skyPosition => Vector2(dashboardPosition.x, blockSize * 2);
 
@@ -81,6 +85,13 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
       print(e);
     }
 
+    add(SpriteComponent(
+      sprite: Sprite(images.fromCache('field.png')),
+      position: Vector2(-2, size.y - 200),
+      size: Vector2(size.x + 2, (size.x + 2) / fieldAssetRatio),
+      priority: 0,
+    ));
+
     _addSolars();
     _addField();
     _addPrimarySun();
@@ -101,6 +112,11 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
     _cloudTimer?.update(dt);
     powerLabel.text = sunPower.toString();
     super.update(dt);
+  }
+
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
   }
 
   void _addGenerator() {
@@ -194,11 +210,8 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
   void _addPowerLabel() {
     powerLabel = Label(
       value: sunPower,
-      size: Vector2(80, 20),
-      position: Vector2(
-        blockSize + 8,
-        powerSunPosition.y + powerSunSize.y + 10,
-      ),
+      size: powerLabelSize,
+      position: powerLabelPosition,
     );
 
     add(powerLabel);

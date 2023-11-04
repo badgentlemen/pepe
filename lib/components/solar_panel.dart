@@ -26,6 +26,7 @@ class SolarPanel extends SpriteComponent with HasGameRef<P2PGame> {
 
   @override
   FutureOr<void> onLoad() {
+    priority = 2;
     size = game.solarPanelSize;
 
     sprite = Sprite(
