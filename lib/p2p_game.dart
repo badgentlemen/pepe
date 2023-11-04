@@ -85,13 +85,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
       print(e);
     }
 
-    add(SpriteComponent(
-      sprite: Sprite(images.fromCache('field.png')),
-      position: Vector2(-2, size.y - 200),
-      size: Vector2(size.x + 2, (size.x + 2) / fieldAssetRatio),
-      priority: 0,
-    ));
-
+    _addHill();
     _addSolars();
     _addField();
     _addPrimarySun();
@@ -114,9 +108,13 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
     super.update(dt);
   }
 
-  @override
-  void onGameResize(Vector2 size) {
-    super.onGameResize(size);
+  void _addHill() {
+    add(SpriteComponent(
+      sprite: Sprite(images.fromCache('hill.png')),
+      position: Vector2(-2, size.y - 170),
+      size: Vector2(size.x + 2, (size.x + 2) / fieldAssetRatio),
+      priority: 0,
+    ));
   }
 
   void _addGenerator() {
