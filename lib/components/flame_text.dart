@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
-import 'package:pepe/plants_vs_pests_game.dart';
+import 'package:pepe/p2p_game.dart';
 
-class FlameText extends TextComponent with HasGameRef<PlantsVsPestsGame> {
+class FlameText extends TextComponent with HasGameRef<P2PGame> {
   FlameText({
     required super.position,
     this.color = Colors.black,

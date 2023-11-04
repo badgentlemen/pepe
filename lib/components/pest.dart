@@ -6,11 +6,11 @@ import 'package:pepe/components/bullet.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/models/pest_animation_type.dart';
 import 'package:pepe/models/pest_type.dart';
-import 'package:pepe/plants_vs_pests_game.dart';
+import 'package:pepe/p2p_game.dart';
 import 'package:pepe/utils.dart';
 
 /// Общий класс вредителя
-class Pest extends SpriteAnimationGroupComponent with HasGameRef<PlantsVsPestsGame>, CollisionCallbacks {
+class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, CollisionCallbacks {
   Pest({
     required this.id,
     required super.position,

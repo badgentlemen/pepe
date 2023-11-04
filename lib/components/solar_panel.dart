@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:pepe/components/sun.dart';
 import 'package:pepe/constants.dart';
-import 'package:pepe/plants_vs_pests_game.dart';
+import 'package:pepe/p2p_game.dart';
 
-class SolarPanel extends SpriteComponent with HasGameRef<PlantsVsPestsGame> {
+class SolarPanel extends SpriteComponent with HasGameRef<P2PGame> {
   SolarPanel({
     required this.index,
     required super.position,

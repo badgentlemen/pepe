@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:pepe/components/flame_text.dart';
 import 'package:pepe/components/sun.dart';
 import 'package:pepe/models/plant_type.dart';
-import 'package:pepe/plants_vs_pests_game.dart';
+import 'package:pepe/p2p_game.dart';
 import 'package:pepe/utils.dart';
 
-class PlantCard extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
+class PlantCard extends RectangleComponent with HasGameRef<P2PGame> {
   PlantCard({
     required this.type,
     required super.position,
@@ -106,6 +106,7 @@ class PlantCard extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
     )..text = costs;
 
     infoField.add(costsLabel);
+
     infoField.add(
       Sun(
         position: Vector2(infoFieldSize.x / 2 - sunSize.x, infoFieldSize.y / 2 - sunSize.y / 2),

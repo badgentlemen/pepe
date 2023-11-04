@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
-import 'package:pepe/plants_vs_pests_game.dart';
+import 'package:pepe/p2p_game.dart';
 
-class TimeProgressBar extends ShapeComponent with HasGameRef<PlantsVsPestsGame> {
+class TimeProgressBar extends ShapeComponent with HasGameRef<P2PGame> {
   TimeProgressBar({int percentage = 0})
       : percentage = percentage > 100
             ? 100

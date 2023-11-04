@@ -4,9 +4,9 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:pepe/components/plant.dart';
 import 'package:pepe/models/plant_type.dart';
-import 'package:pepe/plants_vs_pests_game.dart';
+import 'package:pepe/p2p_game.dart';
 
-class Square extends SpriteComponent with TapCallbacks, HasGameRef<PlantsVsPestsGame> {
+class Square extends SpriteComponent with TapCallbacks, HasGameRef<P2PGame> {
   Square({
     required super.position,
     required this.plantType,

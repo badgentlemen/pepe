@@ -4,10 +4,10 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:pepe/constants.dart';
-import 'package:pepe/plants_vs_pests_game.dart';
+import 'package:pepe/p2p_game.dart';
 
 /// Общий класс ПУЛЬ
-class Bullet extends CircleComponent with CollisionCallbacks, HasGameRef<PlantsVsPestsGame> {
+class Bullet extends CircleComponent with CollisionCallbacks, HasGameRef<P2PGame> {
   Bullet({
     required super.position,
     required this.damage,

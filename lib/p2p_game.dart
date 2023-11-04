@@ -20,9 +20,9 @@ import 'package:pepe/models/plant_type.dart';
 
 const double resolutionAspect = 2319 / 1307;
 
-class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDraggablesBridge {
+class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDraggablesBridge {
   /// Собранная сила солнца
-  int sunPower = 2000;
+  int sunPower = 100;
 
   /// Собранная сила ветра
   int windPower = 100;
@@ -33,15 +33,14 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
 
   List<Pest> pests = [];
 
-  final int fieldRows = 6;
-
-  final int fieldColumns = 15;
-
   final int solarPanels = 3;
 
   double get blockSize => size.x / 22;
 
   late TextComponent powerLabel;
+
+  Vector2 get generatorSize => Vector2(blockSize, blockSize * generatorAssetRatio);
+  Vector2 get generatorPosition => Vector2(size.x - blockSize - generatorSize.x, powerSunPosition.y);
 
   Vector2 get powerSunSize => Vector2(blockSize * 1.4, blockSize * 1.4);
   Vector2 get powerSunPosition => Vector2(blockSize, 10);
@@ -85,6 +84,7 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
     _addPowerSun();
     _addPowerLabel();
     _addPlantCards();
+    _addGenerator();
 
     add(TimeProgressBar(percentage: 90));
 
@@ -96,6 +96,10 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
     _cloudTimer?.update(dt);
     powerLabel.text = sunPower.toString();
     super.update(dt);
+  }
+
+  void _addGenerator() {
+    add(SpriteComponent(sprite: Sprite(images.fromCache('generator.png'),), size: generatorSize,));
   }
 
   void _addPlantCards() {

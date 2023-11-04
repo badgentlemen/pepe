@@ -1,7 +1,7 @@
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:pepe/plants_vs_pests_game.dart';
+import 'package:pepe/p2p_game.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +38,7 @@ class GameApp extends StatelessWidget {
             //   ),
             // ),
             GameWidget(
-              game: PlantsVsPestsGame(),
+              game: P2PGame(),
             ),
           ],
         ),

@@ -5,10 +5,10 @@ import 'package:flame/components.dart';
 import 'package:pepe/components/bullet.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/models/plant_type.dart';
-import 'package:pepe/plants_vs_pests_game.dart';
+import 'package:pepe/p2p_game.dart';
 import 'package:uuid/uuid.dart';
 
-class Plant extends SpriteComponent with HasGameRef<PlantsVsPestsGame>, CollisionCallbacks {
+class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks {
   Plant(this.type) : id = const Uuid().v4();
 
   /// Тип растения

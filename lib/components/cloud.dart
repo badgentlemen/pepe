@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:pepe/constants.dart';
-import 'package:pepe/plants_vs_pests_game.dart';
+import 'package:pepe/p2p_game.dart';
 import 'package:pepe/utils.dart';
 
-class Cloud extends SpriteComponent with HasGameRef<PlantsVsPestsGame> {
+class Cloud extends SpriteComponent with HasGameRef<P2PGame> {
   Cloud();
 
   Timer? _timer;

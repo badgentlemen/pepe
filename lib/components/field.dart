@@ -3,16 +3,14 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 import 'package:pepe/components/pest.dart';
+import 'package:pepe/constants.dart';
 import 'package:pepe/models/plant_type.dart';
-import 'package:pepe/plants_vs_pests_game.dart';
+import 'package:pepe/p2p_game.dart';
 import 'package:pepe/components/square.dart';
 import 'package:pepe/utils.dart';
 import 'package:uuid/uuid.dart';
 
-const int fieldRows = 6;
-const int fieldColumns = 15;
-
-class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
+class Field extends RectangleComponent with HasGameRef<P2PGame> {
   Field();
 
   Timer? _timer;
