@@ -24,7 +24,7 @@ const double resolutionAspect = 2319 / 1307;
 
 class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDraggablesBridge {
   /// Собранная сила солнца
-  int sunPower = 1000;
+  int sunPower = 100;
 
   /// Собранная сила ветра
   int electricity = 100;
