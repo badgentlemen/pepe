@@ -15,6 +15,7 @@ import 'package:pepe/components/solar_panel.dart';
 import 'package:pepe/components/square.dart';
 import 'package:pepe/components/sun.dart';
 import 'package:pepe/components/time_progress_bar.dart';
+import 'package:pepe/components/wind_turbine.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/models/plant_type.dart';
 
@@ -33,8 +34,6 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
 
   List<Pest> pests = [];
 
-  final int solarPanels = 3;
-
   double get blockSize => size.x / 22;
 
   late TextComponent powerLabel;
@@ -49,11 +48,16 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
 
   Vector2 get skyPosition => Vector2(dashboardPosition.x, blockSize * 2);
 
-  Vector2 get primarySunPosition => Vector2(size.x - primarySunSize.x, skyPosition.y);
+  Vector2 get primarySunPosition => Vector2(size.x - primarySunSize.x - blockSize, skyPosition.y);
   Vector2 get primarySunSize => Vector2(blockSize * 2.2, blockSize * 2.2);
 
   Vector2 get solarPanelSize => Vector2(blockSize * 1.5, (blockSize * 1.5) / SolarPanel.aspectRatio);
   Vector2 get solarPanelPosition => Vector2(dashboardPosition.x, size.y - blockSize - solarPanelSize.y);
+
+  double get windTurbineHeight => blockSize * 1.2;
+  double get windTurbineSpace => blockSize * .5;
+  Vector2 get windTurbineSize => Vector2(windTurbineHeight * windTurbineAssetRatio, windTurbineHeight);
+  Vector2 get windTurbinePosition => Vector2(size.x * .48, solarPanelPosition.y);
 
   double get cloudWidth => blockSize * 1.6;
 
@@ -85,6 +89,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
     _addPowerLabel();
     _addPlantCards();
     _addGenerator();
+    _addWindTurbines();
 
     add(TimeProgressBar(percentage: 90));
 
@@ -99,7 +104,15 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
   }
 
   void _addGenerator() {
-    add(SpriteComponent(sprite: Sprite(images.fromCache('generator.png'),), size: generatorSize,));
+    add(
+      SpriteComponent(
+        sprite: Sprite(
+          images.fromCache('generator.png'),
+        ),
+        size: generatorSize,
+        position: generatorPosition,
+      ),
+    );
   }
 
   void _addPlantCards() {
@@ -125,6 +138,14 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
           index: i + 1,
         ),
       );
+    }
+  }
+
+  void _addWindTurbines() {
+    for (var i = 0; i < windTurbines; i++) {
+      final next = Vector2(windTurbinePosition.x + (i * (windTurbineSize.x + windTurbineSpace)), windTurbinePosition.y);
+
+      add(WindTurbine(frequency: 1, power: 1, position: next,));
     }
   }
 
@@ -168,6 +189,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
   void _addPowerLabel() {
     powerLabel = Label(
       value: sunPower,
+
       size: Vector2(80, 20),
       position: Vector2(
         blockSize + 8,

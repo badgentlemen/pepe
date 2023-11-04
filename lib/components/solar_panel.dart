@@ -9,15 +9,12 @@ class SolarPanel extends SpriteComponent with HasGameRef<P2PGame> {
   SolarPanel({
     required this.index,
     required super.position,
-    this.frequency = defaultSolarPanelFrequency,
-    this.power = defaultSolarPanelPower,
+    this.power = systemPowerPerFrequency,
   });
 
   static const aspectRatio = 70 / 45;
 
   final int index;
-
-  final double frequency;
 
   final int power;
 
@@ -60,7 +57,7 @@ class SolarPanel extends SpriteComponent with HasGameRef<P2PGame> {
 
   void _runMovingTimer() {
     _timer = Timer(
-      frequency,
+      1,
       onTick: _onSave,
       repeat: true,
     );

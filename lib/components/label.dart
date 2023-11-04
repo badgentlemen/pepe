@@ -17,7 +17,7 @@ class Label extends TextBoxComponent {
   Future<void> onLoad() {
     textRenderer = TextPaint(
       style: TextStyle(
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w900,
         color: Colors.orange.shade400,
         fontSize: 16,
         height: 1,
