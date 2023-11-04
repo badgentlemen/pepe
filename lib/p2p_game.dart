@@ -26,7 +26,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
   int sunPower = 100;
 
   /// Собранная сила ветра
-  int windPower = 100;
+  int electricity = 100;
 
   bool isSunBlocked = false;
 
@@ -145,7 +145,12 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
     for (var i = 0; i < windTurbines; i++) {
       final next = Vector2(windTurbinePosition.x + (i * (windTurbineSize.x + windTurbineSpace)), windTurbinePosition.y);
 
-      add(WindTurbine(frequency: 1, power: 1, position: next,));
+      add(
+        WindTurbine(
+          position: next,
+          index: i + 1,
+        ),
+      );
     }
   }
 
@@ -189,7 +194,6 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
   void _addPowerLabel() {
     powerLabel = Label(
       value: sunPower,
-
       size: Vector2(80, 20),
       position: Vector2(
         blockSize + 8,
@@ -219,13 +223,13 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
     }
   }
 
-  void increaseWindPower(int other) {
-    windPower += other;
+  void increaseElectricity(int other) {
+    electricity += other;
   }
 
-  void reduceWindPower(int other) {
-    if (windPower > 0) {
-      windPower = max(0, windPower - other);
+  void reduceElectricity(int other) {
+    if (electricity > 0) {
+      electricity = max(0, electricity - other);
     }
   }
 }

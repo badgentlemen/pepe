@@ -2,20 +2,20 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:pepe/components/bolt.dart';
+import 'package:pepe/constants.dart';
 import 'package:pepe/p2p_game.dart';
 
 class WindTurbine extends SpriteComponent with HasGameRef<P2PGame> {
   WindTurbine({
-    required this.frequency,
-    required this.power,
+    this.power = systemPowerPerFrequency,
+    this.index = 0,
     super.position,
   });
 
-  /// Частота срабатывания
-  final double frequency;
-
   /// Сила
   final int power;
+
+  final int index;
 
   final boltWidth = 20.0;
 
@@ -31,7 +31,7 @@ class WindTurbine extends SpriteComponent with HasGameRef<P2PGame> {
     _addBoltIndicator();
 
     _timer = Timer(
-      frequency,
+      1,
       onTick: _saveElectricity,
       repeat: true,
     );
@@ -51,7 +51,9 @@ class WindTurbine extends SpriteComponent with HasGameRef<P2PGame> {
     add(_bolt!);
   }
 
-  void _saveElectricity() {}
+  void _saveElectricity() {
+    game.increaseElectricity(power);
+  }
 
   @override
   void update(double dt) {

@@ -7,8 +7,8 @@ import 'package:pepe/p2p_game.dart';
 
 class SolarPanel extends SpriteComponent with HasGameRef<P2PGame> {
   SolarPanel({
-    required this.index,
     required super.position,
+    this.index = 0,
     this.power = systemPowerPerFrequency,
   });
 
