@@ -5,21 +5,22 @@ class Label extends TextBoxComponent {
   Label({
     super.position,
     super.size,
-    required this.value,
+    this.color,
+    super.text,
   }) : super(
           align: Anchor.center,
           boxConfig: TextBoxConfig(margins: const EdgeInsets.all(4)),
         );
 
-  final int value;
+  final Color? color;
 
   @override
   Future<void> onLoad() {
     textRenderer = TextPaint(
       style: TextStyle(
         fontWeight: FontWeight.w900,
-        color: Colors.orange.shade400,
-        fontSize: 16,
+        color: color ?? Colors.orange.shade400,
+        fontSize: 14,
         height: 1,
       ),
     );
@@ -31,11 +32,12 @@ class Label extends TextBoxComponent {
   void drawBackground(Canvas c) {
     Rect rect = Rect.fromLTWH(0, 0, width, height);
     c.drawRect(
-        rect,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2
-          ..color = Colors.orange.shade400);
+      rect,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2
+        ..color = color ?? Colors.orange.shade400,
+    );
 
     super.drawBackground(c);
   }

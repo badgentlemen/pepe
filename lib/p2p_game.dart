@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
+import 'package:pepe/components/bolt.dart';
 import 'package:pepe/components/cloud.dart';
 import 'package:pepe/components/field.dart';
 import 'package:pepe/components/label.dart';
@@ -34,16 +35,20 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
 
   List<Pest> pests = [];
 
-  double get blockSize => size.x / 22;
+  late Label powerLabel;
+  late Label electricityLabel;
 
-  late TextComponent powerLabel;
+  double get blockSize => size.x / blockSizeImpl;
 
   Vector2 get generatorSize => Vector2(blockSize, blockSize * generatorAssetRatio);
   Vector2 get generatorPosition => Vector2(size.x - blockSize - generatorSize.x, powerSunPosition.y);
 
-  Vector2 get powerLabelSize => Vector2(80, 20);
+  Vector2 get labelsSize => Vector2(60, 20);
+
   Vector2 get powerLabelPosition =>
-      Vector2(dashboardPosition.x / 2 - powerLabelSize.x / 2, powerSunPosition.y + powerSunSize.y + 10);
+      Vector2(dashboardPosition.x / 2 - labelsSize.x / 2, powerSunPosition.y + powerSunSize.y + 10);
+
+  Vector2 get electricityLabelPosition => Vector2(generatorPosition.x, generatorPosition.y + generatorSize.x + 5);
 
   Vector2 get powerSunSize => Vector2(blockSize * 1.4, blockSize * 1.4);
   Vector2 get powerSunPosition => Vector2(dashboardPosition.x / 2 - powerSunSize.x / 2, 10);
@@ -94,6 +99,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
     _addPowerLabel();
     _addPlantCards();
     _addGenerator();
+    _addElectricityLabel();
     _addWindTurbines();
 
     add(TimeProgressBar(percentage: 90));
@@ -105,6 +111,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
   void update(double dt) {
     _cloudTimer?.update(dt);
     powerLabel.text = sunPower.toString();
+    electricityLabel.text = electricity.toString();
     super.update(dt);
   }
 
@@ -195,7 +202,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
       onTick: () {
         final random = Random().nextDouble();
 
-        if (random <= .2) {
+        if (random <= .2 || random >= .8) {
           sendCloud();
         }
       },
@@ -207,12 +214,32 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
 
   void _addPowerLabel() {
     powerLabel = Label(
-      value: sunPower,
-      size: powerLabelSize,
+      text: sunPower.toString(),
+      size: labelsSize,
       position: powerLabelPosition,
     );
 
     add(powerLabel);
+  }
+
+  void _addElectricityLabel() {
+    electricityLabel = Label(
+        text: electricity.toString(),
+        color: Colors.blue.shade900,
+        size: labelsSize,
+        position: electricityLabelPosition);
+
+    add(electricityLabel);
+
+    add(
+      Bolt(
+        w: 16,
+        position: Vector2(
+          electricityLabelPosition.x + labelsSize.x + 5,
+          electricityLabelPosition.y + 2,
+        ),
+      ),
+    );
   }
 
   void _addPrimarySun() {

@@ -8,13 +8,13 @@ const double cloudFrequency = 8;
 const double defaultSpeed = 1;
 const double bulletRadius = 10;
 
-const int fieldRows = 6;
-const int fieldColumns = 15;
+const blockSizeImpl = 23;
+const int fieldRows = 7;
+const int fieldColumns = 16;
 const int solarPanels = 3;
 const int windTurbines = 3;
 
 const fieldAssetRatio = 1025 / 272;
-
 const plantCardRatio = 170 / 220;
 const cloudAssetRatio = 958 / 641;
 const carrotAssetRatio = 580 / 539;
