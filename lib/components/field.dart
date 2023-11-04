@@ -28,7 +28,7 @@ class Field extends RectangleComponent with HasGameRef<P2PGame> {
       repeat: true,
     );
 
-    // _sendPestAt(0);
+    _sendPestAt(0);
 
     return super.onLoad();
   }

@@ -6,6 +6,7 @@ class Label extends TextBoxComponent {
     super.position,
     super.size,
     this.color,
+    this.backgroundColor,
     super.text,
   }) : super(
           align: Anchor.center,
@@ -13,6 +14,8 @@ class Label extends TextBoxComponent {
         );
 
   final Color? color;
+
+  final Color? backgroundColor;
 
   @override
   Future<void> onLoad() {

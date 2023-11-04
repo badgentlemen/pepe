@@ -4,6 +4,10 @@ import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
+extension DoubleExt on double {
+  double toPrecision(int n) => double.parse(toStringAsFixed(n));
+}
+
 SpriteAnimation fetchAmimation(
   Images images, {
   required String of,

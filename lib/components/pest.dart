@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:pepe/components/bullet.dart';
+import 'package:pepe/components/health_indicator.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/models/pest_animation_type.dart';
 import 'package:pepe/models/pest_type.dart';
@@ -19,7 +20,9 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
     this.value = defaultPestValue,
     this.delay = 5,
     this.dodgePercent = 0,
-  });
+  }) {
+    _currentHealth = health;
+  }
 
   late SpriteAnimation _idleAnimation;
 
@@ -41,7 +44,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   final double dodgePercent;
 
   /// Здоровье
-  int health;
+  final int health;
 
   bool isStopped = false;
 
@@ -49,9 +52,9 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
   Timer? _timer;
 
-  int step = 0;
+  int _currentHealth = 0;
 
-  int get xIndex => ((position.x - game.blockSize) / game.blockSize).floor();
+  late HealthIndicator _healthIndicator;
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
@@ -70,11 +73,13 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
     _loadAllAnimations();
     priority = 2;
 
-    add(RectangleHitbox());
+    _addHitbox();
+
+    _addHealthIndicator();
 
     _timer = Timer(
       isSlowDown ? delay * 1.5 : delay,
-      onTick: move,
+      onTick: _move,
       repeat: true,
     );
 
@@ -84,16 +89,33 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   @override
   void update(double dt) {
     _timer?.update(dt);
+    _healthIndicator.updateData(max: health, value: _currentHealth);
     super.update(dt);
   }
 
-  void move() {
+  void _addHitbox() {
+    add(RectangleHitbox());
+  }
+
+  void _addHealthIndicator() {
+    final size = Vector2(game.blockSize * .7, 15);
+
+    _healthIndicator = HealthIndicator(
+      value: _currentHealth,
+      max: health,
+      size: size,
+      position: Vector2(width / 2 - size.x / 2, -6),
+    );
+
+    add(_healthIndicator);
+  }
+
+  void _move() {
     if (isStopped) {
       return;
     }
 
     if (position.x != 0) {
-      step += 1;
       position.x -= game.blockSize;
     }
 
@@ -112,11 +134,11 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
   Future<void> _handleDamage(int damage) async {
     if (health > 0) {
-      health -= damage;
+      _currentHealth -= damage;
       _onHit();
     }
 
-    if (health <= 0) {
+    if (_currentHealth <= 0) {
       _destroy();
     }
   }
@@ -127,14 +149,16 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   }
 
   void _loadAllAnimations() {
-    _idleAnimation = fetchAmimation(game.images,
+    _idleAnimation = fetchAmimation(
+      game.images,
       of: type.title,
       type: 'Idle',
       size: type.spriteSize,
       amount: PestAnimationType.idle.amount,
     );
 
-    _hitAnimation = fetchAmimation(game.images,
+    _hitAnimation = fetchAmimation(
+      game.images,
       of: type.title,
       type: 'Hit',
       size: type.spriteSize,
