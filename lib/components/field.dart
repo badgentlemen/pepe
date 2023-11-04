@@ -26,11 +26,11 @@ class Field extends RectangleComponent with HasGameRef<PlantsVsPestsGame> {
 
     _timer = Timer(
       1,
-      onTick: _someRandom,
+      // onTick: _someRandom,
       repeat: true,
     );
 
-    _sendPestAt(0);
+    // _sendPestAt(0);
 
     return super.onLoad();
   }

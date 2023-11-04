@@ -4,8 +4,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
-
-
+import 'package:pepe/utils.dart';
 
 class Cloud extends SpriteComponent with HasGameRef<PlantsVsPestsGame> {
   Cloud();
@@ -16,7 +15,9 @@ class Cloud extends SpriteComponent with HasGameRef<PlantsVsPestsGame> {
 
   @override
   FutureOr<void> onLoad() {
-    position = Vector2(game.skyPosition.x, game.skyPosition.y + 20);
+    final randomOffset = random(20, 80);
+
+    position = Vector2(game.skyPosition.x, game.skyPosition.y + randomOffset);
     size = Vector2(game.cloudWidth, calculatedHeight);
 
     add(RectangleHitbox());

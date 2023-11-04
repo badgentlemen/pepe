@@ -5,7 +5,6 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
-import 'package:pepe/components/airplane.dart';
 import 'package:pepe/components/cloud.dart';
 import 'package:pepe/components/field.dart';
 import 'package:pepe/components/label.dart';
@@ -23,7 +22,7 @@ const double resolutionAspect = 2319 / 1307;
 
 class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDraggablesBridge {
   /// Собранная сила солнца
-  int sunPower = 1000;
+  int sunPower = 100;
 
   /// Собранная сила ветра
   int windPower = 100;
@@ -44,27 +43,29 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
 
   late TextComponent powerLabel;
 
+  Vector2 get powerSunSize => Vector2(blockSize * 1.4, blockSize * 1.4);
+  Vector2 get powerSunPosition => Vector2(blockSize, 10);
+
   Vector2 get dashboardPosition => Vector2(blockSize * 3, 5);
 
   Vector2 get skyPosition => Vector2(dashboardPosition.x, blockSize * 2);
 
   Vector2 get primarySunPosition => Vector2(size.x - primarySunSize.x, skyPosition.y);
-
   Vector2 get primarySunSize => Vector2(blockSize * 2.2, blockSize * 2.2);
 
   Vector2 get solarPanelSize => Vector2(blockSize * 1.5, (blockSize * 1.5) / SolarPanel.aspectRatio);
-
   Vector2 get solarPanelPosition => Vector2(dashboardPosition.x, size.y - blockSize - solarPanelSize.y);
 
   double get cloudWidth => blockSize * 1.6;
 
   double get plantCardWidth => blockSize * 1.6;
-
   double get plantCardHeight => plantCardWidth / plantCardRatio;
 
   double get timingWidth => size.x / 4;
 
   Timer? _cloudTimer;
+
+  bool isPaused = false;
 
   @override
   Color backgroundColor() => Colors.transparent;
@@ -76,10 +77,6 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
     } catch (e) {
       print(e);
     }
-
-    add(
-      Airplane(position: Vector2(0, 0), width: blockSize * 1.5),
-    );
 
     _addSolars();
     _addField();
@@ -134,8 +131,8 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
 
   void _addPowerSun() {
     final sun = Sun(
-      position: Vector2(blockSize, 10),
-      size: Vector2(blockSize * 1.4, blockSize * 1.4),
+      position: powerSunPosition,
+      size: powerSunSize,
       reversed: true,
     );
 
@@ -168,7 +165,10 @@ class PlantsVsPestsGame extends FlameGame with TapCallbacks, HasCollisionDetecti
     powerLabel = Label(
       value: sunPower,
       size: Vector2(80, 20),
-      position: Vector2(15, 100),
+      position: Vector2(
+        blockSize + 8,
+        powerSunPosition.y + powerSunSize.y + 10,
+      ),
     );
 
     add(powerLabel);
