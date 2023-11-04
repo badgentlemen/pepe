@@ -4,6 +4,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:pepe/components/bullet.dart';
 import 'package:pepe/components/health_indicator.dart';
+import 'package:pepe/components/plant.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/models/pest_animation_type.dart';
 import 'package:pepe/models/pest_type.dart';
@@ -18,6 +19,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
     this.health = defaultHealth,
     this.type = PestType.bunny,
     this.value = defaultPestValue,
+    this.damage = defaultDamage,
     this.delay = 5,
     this.dodgePercent = 0,
   }) {
@@ -34,6 +36,9 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   /// Идентификатор
   final String id;
 
+  /// Наносимый урон
+  final int damage;
+
   /// Скорость передвижения
   final double delay;
 
@@ -46,25 +51,19 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   /// Здоровье
   final int health;
 
-  bool isStopped = false;
+  bool isEffectWithPlant = false;
+
+  bool get isStopped => position.x <= 0 || isEffectWithPlant;
 
   bool isSlowDown = false;
 
-  Timer? _timer;
+  Timer? _movingTimer;
+
+  Timer? _plantEffectTimer;
 
   int _currentHealth = 0;
 
   late HealthIndicator _healthIndicator;
-
-  @override
-  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    if (other is Bullet) {
-      _handleDamage(other.damage);
-      other.removeFromParent();
-    }
-
-    super.onCollision(intersectionPoints, other);
-  }
 
   @override
   FutureOr<void> onLoad() {
@@ -77,7 +76,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
     _addHealthIndicator();
 
-    _timer = Timer(
+    _movingTimer = Timer(
       isSlowDown ? delay * 1.5 : delay,
       onTick: _move,
       repeat: true,
@@ -88,9 +87,40 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
   @override
   void update(double dt) {
-    _timer?.update(dt);
+    _movingTimer?.update(dt);
+    _plantEffectTimer?.update(dt);
     _healthIndicator.updateData(max: health, value: _currentHealth);
     super.update(dt);
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    if (other is Bullet) {
+      _handleDamage(other.damage);
+      other.removeFromParent();
+    }
+
+    if (other is Plant) {
+      isEffectWithPlant = true;
+
+      _plantEffectTimer ??= Timer(
+        other.fireFrequency,
+        onTick: () => _handleDamage(other.damage),
+        repeat: true,
+      );
+    }
+
+    super.onCollision(intersectionPoints, other);
+  }
+
+  @override
+  void onCollisionEnd(PositionComponent other) {
+    if (other is Plant) {
+      isEffectWithPlant = false;
+      _disposePlantEffectTimer();
+    }
+
+    super.onCollisionEnd(other);
   }
 
   void _addHitbox() {
@@ -118,10 +148,6 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
     if (position.x != 0) {
       position.x -= game.blockSize;
     }
-
-    if (position.x <= 0) {
-      isStopped = true;
-    }
   }
 
   Future<void> _onHit() async {
@@ -134,7 +160,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
   Future<void> _handleDamage(int damage) async {
     if (health > 0) {
-      _currentHealth -= damage;
+      _currentHealth = _currentHealth - damage;
       _onHit();
     }
 
@@ -146,6 +172,11 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   void _destroy() {
     game.onPestKill(this);
     removeFromParent();
+  }
+
+  void _disposePlantEffectTimer() {
+    _plantEffectTimer?.stop();
+    _plantEffectTimer = null;
   }
 
   void _loadAllAnimations() {
