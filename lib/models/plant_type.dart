@@ -1,6 +1,5 @@
 import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
-import 'package:flame/extensions.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/utils.dart';
 
@@ -8,11 +7,11 @@ enum PlantType {
   /// арбуз
   watermelon,
 
-  /// морковь
-  carrot,
-
   /// кукуруза
   corn,
+
+  /// морковь
+  carrot,
 }
 
 extension PlantTypeExt on PlantType {
@@ -69,9 +68,18 @@ extension PlantTypeExt on PlantType {
     }
   }
 
+  /// Время от зерна до растения в миллисекундах
+  int get growingTimeInMs {
+    switch (this) {
+      case PlantType.watermelon:
+        return 500;
+      case PlantType.corn:
+        return 1500;
+      case PlantType.carrot:
+        return 2800;
+    }
+  }
+
   /// Частота удара + стрельбы
   double get fireFrequency => 4;
-
-  /// Время перехода из зерна в полноценное растение
-  int get growingUpTimeSec => 3;
 }

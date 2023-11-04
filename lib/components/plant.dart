@@ -5,14 +5,7 @@ import 'package:flame/components.dart';
 import 'package:pepe/components/bullet.dart';
 import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/plants_vs_pests_game.dart';
-import 'package:pepe/utils.dart';
 import 'package:uuid/uuid.dart';
-// import 'package:flame/extensions.dart';
-
-enum PlantAnimationType {
-  idle,
-  fire,
-}
 
 class Plant extends SpriteComponent with HasGameRef<PlantsVsPestsGame>, CollisionCallbacks {
   Plant(this.type) : id = const Uuid().v4();
@@ -35,27 +28,49 @@ class Plant extends SpriteComponent with HasGameRef<PlantsVsPestsGame>, Collisio
   /// Частота удара + стрельбы
   double get fireFrequency => type.fireFrequency;
 
+  /// Интервал для стрельбы
   Timer? _interval;
 
-  bool get canFire => true;
+  /// Выросло ли растение
+  bool _hasGrown = false;
+
+  /// Имеет возможность стрелять
+  bool get canFire => _hasGrown;
 
   @override
   FutureOr<void> onLoad() async {
+    _setSprout();
+
+    Future.delayed(Duration(milliseconds: type.growingTimeInMs), () => _initAfterGrown());
+
+    return super.onLoad();
+  }
+
+  void _setSprout() {
+    _hasGrown = false;
+
+    size = Vector2(game.blockSize, game.blockSize);
+
+    sprite = Sprite(game.images.fromCache('sprout.png'));
+  }
+
+  void _initAfterGrown() {
+    _hasGrown = true;
+
     size = type.aspectSize(game.blockSize);
     position = Vector2(width / 2 - size.x / 2, height / 2 - size.y / 2);
+
     sprite = type.fetchSprite(game.images);
 
-    debugMode = true;
+    _initFireTimer();
+  }
 
-    priority = 1;
-
+  void _initFireTimer() {
     _interval = Timer(
       fireFrequency,
       onTick: fire,
       repeat: true,
     );
-
-    return super.onLoad();
   }
 
   @override
