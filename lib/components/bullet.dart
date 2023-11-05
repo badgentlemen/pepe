@@ -4,18 +4,22 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:pepe/constants.dart';
+import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/p2p_game.dart';
+import 'package:uuid/uuid.dart';
 
 /// Общий класс ПУЛЬ
 class Bullet extends CircleComponent with CollisionCallbacks, HasGameRef<P2PGame> {
   Bullet({
     required super.position,
     required this.damage,
-    required this.color,
+    required this.plantType,
     this.speed = defaultSpeed,
-  }) : super(radius: bulletRadius);
+  }) : id = const Uuid().v4(), super(radius: bulletRadius,);
 
-  final Color color;
+  final PlantType plantType;
+
+  final String id;
 
   /// Наносимый урон от пули
   final int damage;
@@ -28,7 +32,7 @@ class Bullet extends CircleComponent with CollisionCallbacks, HasGameRef<P2PGame
   @override
   Future<void> onLoad() async {
     paintLayers = [
-      Paint()..color = color,
+      Paint()..color = plantType.bulletColor,
       Paint()
         ..style = PaintingStyle.stroke
         ..color = Colors.black

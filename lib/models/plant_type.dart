@@ -16,7 +16,7 @@ enum PlantType {
 }
 
 extension PlantTypeExt on PlantType {
-  Color get color {
+  Color get bulletColor {
     switch (this) {
       case PlantType.carrot:
         return Colors.orange.shade400;

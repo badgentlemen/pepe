@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
@@ -18,9 +19,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
     required super.position,
     this.type = PestType.bunny,
     this.value = defaultPestValue,
-    this.damage = defaultDamage,
     this.delay = 5,
-    this.dodgePercent = 0,
   });
 
   late SpriteAnimation _idleAnimation;
@@ -33,9 +32,6 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   /// Идентификатор
   final String id;
 
-  /// Наносимый урон
-  final int damage;
-
   /// Скорость передвижения
   final double delay;
 
@@ -43,10 +39,13 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   final int value;
 
   /// Вероятность уклонения от атаки
-  final double dodgePercent;
+  int get dodgePercent => type.dodgePercent;
 
   /// Здоровье
   int get health => type.health;
+
+  /// Наносимый урон
+  int get damage => type.damage;
 
   bool get isStopped => position.x <= 0 || _isEffectWithPlant;
 
@@ -58,11 +57,12 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
   int _currentHealth = 0;
 
+  final List<String> _dodgedBullets = [];
+
   late HealthIndicator _healthIndicator;
 
   @override
   FutureOr<void> onLoad() {
-
     _currentHealth = health;
 
     size = Vector2(game.blockSize, game.blockSize);
@@ -94,6 +94,18 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is Bullet) {
+      if (_dodgedBullets.contains(other.id)) {
+        return;
+      }
+
+      final isDodged = dodgePercent > 0 ? Random().nextInt(100) <= dodgePercent : false;
+
+      if (isDodged) {
+        _dodgedBullets.add(other.id);
+        print('задоджили');
+        return;
+      }
+
       _handleDamage(other.damage);
       other.removeFromParent();
     }
@@ -164,7 +176,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
     current = PestAnimationType.idle;
   }
 
-  void _handleDamage(int damage)  {
+  void _handleDamage(int damage) {
     if (health > 0) {
       _currentHealth = _currentHealth - damage;
       _onHit();

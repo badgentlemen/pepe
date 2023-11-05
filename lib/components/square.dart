@@ -22,7 +22,7 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<P2PGame> {
 
   final int column;
 
-  bool get canBuy => game.sunPower > plantType.price;
+  bool get canBuy => game.sunPower >= plantType.price;
 
   bool get canPlant => _plant == null && canBuy;
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
 import 'package:pepe/components/airplane.dart';
 import 'package:pepe/components/bolt.dart';
@@ -9,7 +10,7 @@ import 'package:pepe/models/airplane_type.dart';
 import 'package:pepe/p2p_game.dart';
 import 'package:pepe/utils.dart';
 
-class AirplaneCard extends RectangleComponent with HasGameRef<P2PGame> {
+class AirplaneCard extends RectangleComponent with TapCallbacks,HasGameRef<P2PGame> {
   AirplaneCard({
     required this.type,
     super.position,
@@ -68,6 +69,11 @@ class AirplaneCard extends RectangleComponent with HasGameRef<P2PGame> {
     return super.onLoad();
   }
 
+  @override
+  void onTapUp(TapUpEvent event) {
+    _handleTapped();
+  }
+
   _addAiplane() {
     final aiplane = Airplane(
       width: width * .7,
@@ -112,5 +118,9 @@ class AirplaneCard extends RectangleComponent with HasGameRef<P2PGame> {
     );
 
     addAll([textComponent, bolt]);
+  }
+
+  void _handleTapped() {
+
   }
 }

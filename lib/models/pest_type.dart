@@ -7,6 +7,28 @@ enum PestType {
 }
 
 extension PestTypeExt on PestType {
+  int get damage {
+    switch (this) {
+      case PestType.bunny:
+        return 20;
+      case PestType.snail:
+        return 15;
+      case PestType.turtle:
+        return 8;
+    }
+  }
+
+  int get dodgePercent {
+    switch (this) {
+      case PestType.bunny:
+        return 36;
+      case PestType.snail:
+        return 24;
+      case PestType.turtle:
+        return 12;
+    }
+  }
+
   String get title {
     switch (this) {
       case PestType.bunny:

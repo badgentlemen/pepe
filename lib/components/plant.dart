@@ -159,8 +159,9 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
       final bullet = Bullet(
         position: Vector2(game.blockSize, game.blockSize / 2 - bulletRadius),
         damage: damage,
-        color: type.color,
+        plantType: type,
       );
+
       add(bullet);
     }
   }
