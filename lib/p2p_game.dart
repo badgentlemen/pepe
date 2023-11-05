@@ -7,7 +7,6 @@ import 'package:pepe/components/level.dart';
 import 'package:pepe/components/solar_panel.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/mock_level_scripts.dart';
-import 'package:pepe/models/level_script.dart';
 
 class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDraggablesBridge {
   double get blockSize => size.x / blockSizeImpl;

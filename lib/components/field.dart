@@ -6,7 +6,6 @@ import 'package:pepe/components/bullet.dart';
 import 'package:pepe/components/field_border.dart';
 import 'package:pepe/components/pest.dart';
 import 'package:pepe/constants.dart';
-import 'package:pepe/models/pest_type.dart';
 import 'package:pepe/models/scripted_pest.dart';
 import 'package:pepe/p2p_game.dart';
 import 'package:pepe/components/square.dart';
