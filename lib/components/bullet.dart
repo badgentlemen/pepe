@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
+import 'package:pepe/components/field.dart';
+import 'package:pepe/components/field_border.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/p2p_game.dart';
 
@@ -27,16 +29,18 @@ class Bullet extends CircleComponent with CollisionCallbacks, HasGameRef<P2PGame
 
   @override
   Future<void> onLoad() async {
-
     paintLayers = [
       Paint()..color = color,
-      Paint()..style = PaintingStyle.stroke..color = Colors.black..strokeWidth = 2,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..color = Colors.black
+        ..strokeWidth = 2,
     ];
 
     add(RectangleHitbox());
 
     _timer = Timer(
-      speed,
+      speed / bulletFps,
       onTick: _move,
       repeat: true,
     );
@@ -51,13 +55,7 @@ class Bullet extends CircleComponent with CollisionCallbacks, HasGameRef<P2PGame
     super.update(dt);
   }
 
-  @override
-  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    // TODO: implement onCollision
-    super.onCollision(intersectionPoints, other);
-  }
-
   void _move() {
-    position.x += width;
+    position.x += width / bulletFps;
   }
 }

@@ -59,7 +59,6 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
   @override
   void update(double dt) {
     _movingTimer?.update(dt);
-    print(_currentHealth);
     _healthIndicator?.updateData(max: health, value: _currentHealth);
     super.update(dt);
   }

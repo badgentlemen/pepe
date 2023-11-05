@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:pepe/components/field_border.dart';
 import 'package:pepe/components/pest.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/p2p_game.dart';
@@ -20,6 +21,7 @@ class Field extends RectangleComponent with HasGameRef<P2PGame> {
     position = Vector2(game.dashboardPosition.x, game.size.y - (game.blockSize * 2.2) - size.y);
 
     _buildNet();
+    _addBorders();
 
     _timer = Timer(
       1,
@@ -36,6 +38,36 @@ class Field extends RectangleComponent with HasGameRef<P2PGame> {
   void update(double dt) {
     _timer?.update(dt);
     super.update(dt);
+  }
+
+  void _addBorders() {
+    add(
+      FieldBorder(
+        position: Vector2(0, 0),
+        size: Vector2(2, height),
+      ),
+    );
+    add(
+      FieldBorder(
+        position: Vector2(0, 0),
+        size: Vector2(width, 2),
+      ),
+    );
+    add(
+      FieldBorder(
+        position: Vector2(width, 0),
+        size: Vector2(
+          2,
+          height,
+        ),
+      ),
+    );
+    add(
+      FieldBorder(
+        position: Vector2(0, height),
+        size: Vector2(width, 2),
+      ),
+    );
   }
 
   void _sendPestAt(int row) {
