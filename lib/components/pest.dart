@@ -169,7 +169,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
   Future<void> _onHit() async {
     current = PestAnimationType.hit;
-    await Future.delayed(Duration(seconds: (1 / type.hitAnimationAmount).floor()));
+    await Future.delayed(Duration(seconds: (pestFps / type.hitAnimationAmount).floor()));
     current = PestAnimationType.run;
   }
 
