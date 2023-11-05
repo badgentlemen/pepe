@@ -81,6 +81,8 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
 
   bool isPaused = false;
 
+  String? loadImagesError;
+
   @override
   Color backgroundColor() => Colors.transparent;
 
@@ -89,7 +91,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
     try {
       await images.loadAllImages();
     } catch (e) {
-      print(e);
+      loadImagesError = e.toString();
     }
 
     _addHill();
@@ -245,10 +247,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
 
   void _addElectricityLabel() {
     electricityLabel = Label(
-        text: electricity.toString(),
-        color: electricityColor,
-        size: labelsSize,
-        position: electricityLabelPosition);
+        text: electricity.toString(), color: electricityColor, size: labelsSize, position: electricityLabelPosition);
 
     add(electricityLabel);
 

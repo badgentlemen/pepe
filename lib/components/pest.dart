@@ -102,7 +102,6 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
       if (isDodged) {
         _dodgedBullets.add(other.id);
-        print('задоджили');
         return;
       }
 
