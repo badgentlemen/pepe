@@ -22,7 +22,7 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<P2PGame> {
 
   final int column;
 
-  bool get canBuy => game.sunPower >= plantType.price;
+  bool get canBuy => game.level == null ? false : game.level!.sunPower >= plantType.price;
 
   bool get canPlant => _plant == null && canBuy;
 
@@ -36,20 +36,23 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<P2PGame> {
   }
 
   void _addPlant() {
+    if (game.level == null) {
+      return;
+    }
+
     if (!canPlant) {
       return;
     }
 
     _plant = Plant(plantType);
 
-    game.reduceSunPower(_plant!.price);
+    game.level!.reduceSunPower(_plant!.price);
 
     add(_plant!);
   }
 
   @override
   FutureOr<void> onLoad() async {
-
     size = Vector2(game.blockSize, game.blockSize);
     sprite = plantType.fetchGrassSprite(game.images);
 

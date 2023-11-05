@@ -185,7 +185,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   }
 
   void _destroy() {
-    game.onPestKill(this);
+    game.level?.onPestKill(this);
     removeFromParent();
   }
 

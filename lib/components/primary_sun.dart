@@ -20,7 +20,7 @@ class PrimarySun extends Sun with CollisionCallbacks {
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is Cloud) {
-      game.isSunBlocked = true;
+      game.level?.isSunBlocked = true;
     }
 
     super.onCollision(intersectionPoints, other);
@@ -29,7 +29,7 @@ class PrimarySun extends Sun with CollisionCallbacks {
   @override
   void onCollisionEnd(PositionComponent other) {
     if (other is Cloud) {
-      game.isSunBlocked = false;
+      game.level?.isSunBlocked = false;
     }
 
     super.onCollisionEnd(other);

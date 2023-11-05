@@ -92,7 +92,7 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
       type: randomPestType(),
     );
 
-    game.pests.add(pest);
+    game.level?.pests.add(pest);
     add(pest);
   }
 
@@ -127,7 +127,7 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
         list.add(square);
       }
 
-      game.fieldSquares.add(list);
+      game.level?.fieldSquares.add(list);
     }
   }
 }

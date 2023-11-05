@@ -67,14 +67,21 @@ class SolarPanel extends SpriteComponent with HasGameRef<P2PGame> {
   @override
   void update(double dt) {
     _timer?.update(dt);
-    _sun?.setOpacity(game.isSunBlocked ? 0 : 1);
+
+    if (game.level != null) {
+      _sun?.setOpacity(game.level!.isSunBlocked ? 0 : 1);
+    }
 
     super.update(dt);
   }
 
   void _onSave() {
-    if (!game.isSunBlocked) {
-      game.increaseSunPower(power);
+    if (game.level == null) {
+      return;
+    }
+
+    if (!game.level!.isSunBlocked) {
+      game.level!.increaseSunPower(power);
     }
   }
 }

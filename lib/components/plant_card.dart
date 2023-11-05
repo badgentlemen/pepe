@@ -19,7 +19,7 @@ class PlantCard extends RectangleComponent with HasGameRef<P2PGame> {
 
   String get priceString => type.price.toString();
 
-  int get countWeCanBuy => (game.sunPower / type.price).floor();
+  int get countWeCanBuy => game.level == null ? 0 : (game.level!.sunPower / type.price).floor();
 
   String get countWeCanBuyString => countWeCanBuy.toString();
 

@@ -53,15 +53,19 @@ class WindTurbine extends SpriteComponent with HasGameRef<P2PGame> {
   }
 
   void _saveElectricity() {
-    if (game.isSunBlocked) {
-      game.increaseElectricity(power);
+    if (game.level == null) {
+      return;
+    }
+
+    if (game.level!.isSunBlocked) {
+      game.level!.increaseElectricity(power);
     }
   }
 
   @override
   void update(double dt) {
     _timer?.update(dt);
-    _bolt?.setOpacity(game.isSunBlocked ? 1 : 0);
+    _bolt?.setOpacity(game.level!.isSunBlocked ? 1 : 0);
 
     super.update(dt);
   }
