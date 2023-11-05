@@ -24,6 +24,12 @@ class HealthIndicator extends RectangleComponent with HasGameRef<P2PGame> {
 
   Vector2 get _indicatorSize => Vector2(size.x * (_percentage / 100), size.y - _strokeWidth);
 
+  Color get _indicatorColor => _percentage <= 30
+      ? Colors.red
+      : _percentage <= 50
+          ? Colors.orange
+          : Colors.green;
+
   final textStyle = const TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w600,
@@ -44,12 +50,11 @@ class HealthIndicator extends RectangleComponent with HasGameRef<P2PGame> {
 
   @override
   FutureOr<void> onLoad() {
-
-
     _addIndicator();
     _addTextComponent();
 
     paintLayers = [
+      Paint()..color = Colors.white,
       Paint()
         ..style = PaintingStyle.stroke
         ..color = Colors.black
@@ -61,6 +66,7 @@ class HealthIndicator extends RectangleComponent with HasGameRef<P2PGame> {
 
   @override
   void update(double dt) {
+    _updateIndicatorColor();
     _textComponent.text = _text;
     _textComponent.position = textPosition;
     _indicatorComponent.size = _indicatorSize;
@@ -76,9 +82,12 @@ class HealthIndicator extends RectangleComponent with HasGameRef<P2PGame> {
     setValue(value);
   }
 
+  void _updateIndicatorColor() => _indicatorComponent.paintLayers = [
+        Paint()..color = _indicatorColor,
+      ];
+
   void _addIndicator() {
     _indicatorComponent = RectangleComponent(
-      paintLayers: [Paint()..color = Colors.red],
       size: _indicatorSize,
       position: Vector2(_strokeWidth - 1, _strokeWidth - 1),
     );

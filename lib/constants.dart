@@ -8,7 +8,7 @@ const systemPowerPerFrequency = 1;
 const int defaultPlantPrice = 150;
 const double cloudFrequency = 8;
 const double defaultSpeed = 1;
-const double bulletRadius = 10;
+const double bulletRadius = 8;
 
 
 const blockSizeImpl = 23;
