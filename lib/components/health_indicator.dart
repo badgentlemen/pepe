@@ -11,7 +11,6 @@ class HealthIndicator extends RectangleComponent with HasGameRef<P2PGame> {
     required this.maxValue,
     super.position,
     super.size,
-    super.priority,
   });
 
   num currentValue;
@@ -50,6 +49,9 @@ class HealthIndicator extends RectangleComponent with HasGameRef<P2PGame> {
 
   @override
   FutureOr<void> onLoad() {
+
+    priority = 100;
+
     _addIndicator();
     _addTextComponent();
 

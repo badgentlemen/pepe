@@ -4,7 +4,7 @@ import 'package:flame/components.dart';
 import 'package:pepe/p2p_game.dart';
 
 class Fence extends SpriteComponent with HasGameRef<P2PGame> {
-  Fence({super.position, super.angle});
+  Fence({super.position, super.angle, super.priority, super.scale,});
 
   int get _x => 21;
 

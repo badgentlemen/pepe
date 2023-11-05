@@ -110,6 +110,7 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
   }
 
   void _setSprout() {
+    priority = 2;
     _hasGrown = false;
 
     size = Vector2(game.blockSize, game.blockSize);
@@ -119,6 +120,7 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
 
   void _initAfterGrown() {
     _hasGrown = true;
+    priority = 2;
     _currentHealth = type.health;
 
     size = type.aspectSize(game.blockSize);
@@ -127,7 +129,6 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
     _addHealthIndicator();
 
     sprite = type.fetchSprite(game.images);
-
 
     _initFireTimer();
   }
@@ -139,7 +140,6 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
       maxValue: health,
       currentValue: _currentHealth,
       size: indicatorSize,
-      priority: 10,
       position: Vector2(width / 2 - indicatorSize.x / 2, -6),
     );
 

@@ -11,10 +11,14 @@ import 'package:pepe/mock_level_scripts.dart';
 class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDraggablesBridge {
   double get blockSize => size.x / blockSizeImpl;
 
-  double get fenceWidth => blockSize * .45;
+  double get fenceWidth => blockSize * .5;
+  double get fenceHeight => fenceWidth * .9;
 
   Vector2 get generatorSize => Vector2(blockSize, blockSize * generatorAssetRatio);
   Vector2 get generatorPosition => Vector2(size.x - blockSize - generatorSize.x, powerSunPosition.y);
+
+  Vector2 get fieldSize => Vector2(fieldColumns * blockSize, fieldRows * blockSize);
+  Vector2 get fieldPosition => Vector2(dashboardPosition.x, size.y - (blockSize * 2.2) - fieldSize.y);
 
   Vector2 get labelsSize => Vector2(60, 20);
 

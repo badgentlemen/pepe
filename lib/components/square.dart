@@ -83,7 +83,7 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<P2PGame> {
     size = Vector2(game.blockSize, game.blockSize);
     sprite = plantType.fetchGrassSprite(game.images);
 
-    priority = 1;
+    priority = 2;
     return super.onLoad();
   }
 }

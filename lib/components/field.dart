@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:pepe/components/bullet.dart';
+import 'package:pepe/components/fence.dart';
 import 'package:pepe/components/field_border.dart';
 import 'package:pepe/components/pest.dart';
 import 'package:pepe/constants.dart';
@@ -23,11 +24,12 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
 
   @override
   FutureOr<void> onLoad() {
-    size = Vector2(fieldColumns * game.blockSize, fieldRows * game.blockSize);
-    position = Vector2(game.dashboardPosition.x, game.size.y - (game.blockSize * 2.2) - size.y);
+    size = game.fieldSize;
+    position = game.fieldPosition;
 
     _buildNet();
     _addBorders();
+    _addFences();
 
     return super.onLoad();
   }
@@ -72,6 +74,54 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
 
     game.level?.pests.add(pest);
     add(pest);
+  }
+
+  void _addFences() {
+    final fencesPerRow = width / game.fenceWidth;
+    final fencesPerColumn = height / game.fenceWidth;
+
+    for (var i = 0; i < fencesPerRow; i++) {
+      final positionX = i * game.fenceWidth;
+      add(
+        Fence(
+          position: Vector2(
+            positionX,
+            -game.fenceHeight + 8,
+          ),
+          priority: 2,
+        ),
+      );
+
+      add(
+        Fence(
+          position: Vector2(
+            positionX,
+            height - game.fenceHeight,
+          ),
+          priority: 3,
+        ),
+      );
+
+      for (var i = 0; i < fencesPerColumn; i++) {
+        final positionY = i * game.fenceWidth - 10;
+
+        void addFence(double positionX) {
+          add(
+          Fence(
+            position: Vector2(
+              positionX,
+              positionY,
+            ),
+            priority: 3,
+            angle: 1.55,
+          ),
+        );
+        }
+
+        addFence(game.fenceHeight / 2.3);
+        addFence(width + game.fenceHeight / 1.3);
+      }
+    }
   }
 
   void _addBorders() {
