@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:pepe/components/bullet.dart';
 import 'package:pepe/components/field_border.dart';
 import 'package:pepe/components/pest.dart';
 import 'package:pepe/constants.dart';
@@ -10,7 +12,7 @@ import 'package:pepe/components/square.dart';
 import 'package:pepe/utils.dart';
 import 'package:uuid/uuid.dart';
 
-class Field extends RectangleComponent with HasGameRef<P2PGame> {
+class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallbacks {
   Field();
 
   Timer? _timer;
@@ -33,6 +35,17 @@ class Field extends RectangleComponent with HasGameRef<P2PGame> {
 
     return super.onLoad();
   }
+
+  @override
+  void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
+
+    if (other is Bullet) {
+      other.removeFromParent();
+    }
+
+    super.onCollisionStart(intersectionPoints, other);
+  }
+
 
   @override
   void update(double dt) {

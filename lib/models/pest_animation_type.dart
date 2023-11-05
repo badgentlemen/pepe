@@ -1,6 +1,7 @@
 enum PestAnimationType {
   idle,
   hit,
+  run,
 }
 
 extension PestAnimationTypeExt on PestAnimationType {
@@ -10,6 +11,8 @@ extension PestAnimationTypeExt on PestAnimationType {
         return 8;
       case PestAnimationType.hit:
         return 5;
+      case PestAnimationType.run:
+        return 12;
       default:
         return 1;
     }

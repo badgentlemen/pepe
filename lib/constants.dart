@@ -10,11 +10,16 @@ const double cloudFrequency = 8;
 const double defaultSpeed = 1;
 const double bulletRadius = 10;
 
+const double stepTime = 0.1;
+
 const blockSizeImpl = 23;
 const int fieldRows = 7;
 const int fieldColumns = 16;
 const int solarPanels = 3;
 const int windTurbines = 3;
+
+const int fenceVertCount = 13;
+const int fenceHorCount = 3;
 
 const electricityColor = Color.fromARGB(255, 33, 61, 243);
 const sunPowerColor = Color.fromRGBO(255, 167, 38, 1);

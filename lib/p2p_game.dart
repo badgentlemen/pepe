@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:pepe/components/aiplane_card.dart';
 import 'package:pepe/components/bolt.dart';
 import 'package:pepe/components/cloud.dart';
+import 'package:pepe/components/fence.dart';
 import 'package:pepe/components/field.dart';
 import 'package:pepe/components/label.dart';
 import 'package:pepe/components/pest.dart';
@@ -41,6 +42,8 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
   late Label electricityLabel;
 
   double get blockSize => size.x / blockSizeImpl;
+
+  double get fenceWidth => blockSize * .45;
 
   Vector2 get generatorSize => Vector2(blockSize, blockSize * generatorAssetRatio);
   Vector2 get generatorPosition => Vector2(size.x - blockSize - generatorSize.x, powerSunPosition.y);
@@ -97,6 +100,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
     _addHill();
     _addSolars();
     _addField();
+    _addFences();
     _addPrimarySun();
     _handleClouds();
     _addPowerSun();
@@ -152,6 +156,33 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
         ),
       );
     }
+  }
+
+  void _addFences() {
+    Vector2 nextPosition = Vector2(
+      20,
+      size.y - blockSize * 3,
+    );
+    for (var i = 0; i < fenceHorCount; i++) {
+      nextPosition = Vector2(nextPosition.x + (i * fenceWidth), nextPosition.y);
+      add(Fence(
+        position: nextPosition,
+      ));
+    }
+
+    // add(
+    //   Fence(
+    //       position: Vector2(nextPosition.x + fenceWidth - blockSize / 6, nextPosition.y + blockSize / 10),
+    //       angle: 100),
+    // );
+
+    // for (var i = 0; i < fenceVertCount; i++) {
+    //   add(
+    //     Fence(
+    //       position: Vector2(nextPosition.x + fenceWidth + blockSize / 2, nextPosition.y),
+    //     ),
+    //   );
+    // }
   }
 
   void _addPlaneCards() {

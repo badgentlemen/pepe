@@ -26,6 +26,8 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
   late SpriteAnimation _hitAnimation;
 
+  SpriteAnimation? _runAnimtion;
+
   /// Тип вредителя
   final PestType type;
 
@@ -75,7 +77,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
     _addHealthIndicator();
 
     _movingTimer = Timer(
-      delay,
+      stepTime,
       onTick: _move,
       repeat: true,
     );
@@ -163,7 +165,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
     }
 
     if (position.x != 0) {
-      position.x -= game.blockSize;
+      position.x -= game.blockSize / (delay / stepTime);
     }
   }
 
@@ -172,7 +174,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
     await Future.delayed(Duration(seconds: (1 / PestAnimationType.hit.amount).floor()));
 
-    current = PestAnimationType.idle;
+    current = _runAnimtion != null ? PestAnimationType.run : PestAnimationType.idle;
   }
 
   void _handleDamage(int damage) {
@@ -213,11 +215,22 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
       amount: PestAnimationType.hit.amount,
     );
 
+    if (type == PestType.bunny) {
+      _runAnimtion = fetchAmimation(
+        game.images,
+        of: type.title,
+        type: 'Run',
+        size: type.spriteSize,
+        amount: PestAnimationType.run.amount,
+      );
+    }
+
     animations = {
       PestAnimationType.idle: _idleAnimation,
       PestAnimationType.hit: _hitAnimation,
+      if (_runAnimtion != null) PestAnimationType.run: _runAnimtion!,
     };
 
-    current = PestAnimationType.idle;
+    current = _runAnimtion != null ? PestAnimationType.run : PestAnimationType.idle;
   }
 }

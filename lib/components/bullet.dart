@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
+import 'package:pepe/components/field_border.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/p2p_game.dart';
@@ -39,7 +40,7 @@ class Bullet extends CircleComponent with CollisionCallbacks, HasGameRef<P2PGame
         ..strokeWidth = 2,
     ];
 
-    add(RectangleHitbox());
+    add(CircleHitbox());
 
     _timer = Timer(
       speed / bulletFps,
