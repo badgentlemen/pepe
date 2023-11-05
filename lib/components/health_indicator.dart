@@ -7,17 +7,18 @@ import 'package:pepe/utils.dart';
 
 class HealthIndicator extends RectangleComponent with HasGameRef<P2PGame> {
   HealthIndicator({
-    required this.value,
-    required this.max,
+    required this.currentValue,
+    required this.maxValue,
     super.position,
     super.size,
+    super.priority,
   });
 
-  num value;
+  num currentValue;
 
-  num max;
+  num maxValue;
 
-  int get _percentage => ((value * 100) / max).floor();
+  int get _percentage => ((currentValue * 100) / maxValue).floor();
 
   double get _strokeWidth => 1;
 
@@ -29,7 +30,7 @@ class HealthIndicator extends RectangleComponent with HasGameRef<P2PGame> {
     fontSize: 15,
   );
 
-  String get _text => _percentage.toString();
+  String get _text => currentValue.toString();
 
   Size get textSize => fetchTextSizeByStyle(_text, textStyle);
 
@@ -43,6 +44,8 @@ class HealthIndicator extends RectangleComponent with HasGameRef<P2PGame> {
 
   @override
   FutureOr<void> onLoad() {
+
+
     _addIndicator();
     _addTextComponent();
 
@@ -64,9 +67,9 @@ class HealthIndicator extends RectangleComponent with HasGameRef<P2PGame> {
     super.update(dt);
   }
 
-  void setMax(num value) => max = value;
+  void setMax(num value) => maxValue = value;
 
-  void setValue(num val) => value = val;
+  void setValue(num val) => currentValue = val;
 
   void updateData({required num max, required num value}) {
     setMax(max);

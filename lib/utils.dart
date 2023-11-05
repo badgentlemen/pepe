@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
+import 'package:pepe/models/pest_type.dart';
+import 'package:pepe/models/plant_type.dart';
 
 extension DoubleExt on double {
   double toPrecision(int n) => double.parse(toStringAsFixed(n));
@@ -47,6 +49,10 @@ Sprite fetchGrassAt(
 int random(int min, int max) {
   return min + Random().nextInt(max - min);
 }
+
+PestType randomPestType() => PestType.values[Random().nextInt(PestType.values.length)];
+
+PlantType randomPlantType() => PlantType.values[Random().nextInt(PlantType.values.length)];
 
 Size fetchTextSizeByStyle(
   String text,

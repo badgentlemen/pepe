@@ -29,7 +29,7 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
   int get costs => type.costs;
 
   /// Частота удара + стрельбы
-  double get fireFrequency => type.fireFrequency;
+  double get fireFrequency => type.fireFrequencySec;
 
   /// Интервал для стрельбы
   Timer? _movingTimer;
@@ -49,9 +49,6 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
   @override
   FutureOr<void> onLoad() async {
     _addHitbox();
-
-    _currentHealth = health;
-
     _setSprout();
 
     Future.delayed(Duration(milliseconds: type.growingTimeInMs), () => _initAfterGrown());
@@ -62,6 +59,7 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
   @override
   void update(double dt) {
     _movingTimer?.update(dt);
+    print(_currentHealth);
     _healthIndicator?.updateData(max: health, value: _currentHealth);
     super.update(dt);
   }
@@ -71,7 +69,7 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
     if (other is Pest) {
       _pestEffectTimer ??= Timer(
         1,
-        onTick: () => _handleDamage(other.damage),
+        onTick: () => _hitFromPest(other),
         repeat: true,
       );
     }
@@ -93,9 +91,9 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
     _pestEffectTimer = null;
   }
 
-  void _handleDamage(int damage) {
+  void _hitFromPest(Pest pest) {
     if (health > 0) {
-      _currentHealth = _currentHealth - damage;
+      _currentHealth = _currentHealth - pest.damage;
     }
 
     if (health <= 0) {
@@ -122,34 +120,42 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
 
   void _initAfterGrown() {
     _hasGrown = true;
+    _currentHealth = type.health;
 
     size = type.aspectSize(game.blockSize);
     position = Vector2(width / 2 - size.x / 2, height / 2 - size.y / 2);
 
+    _addHealthIndicator();
+
     sprite = type.fetchSprite(game.images);
 
-    _addHealthIndicator();
 
     _initFireTimer();
   }
 
   void _addHealthIndicator() {
+    final indicatorSize = Vector2(game.blockSize * .7, 15);
+
     _healthIndicator = HealthIndicator(
-      max: health,
-      value: _currentHealth,
+      maxValue: health,
+      currentValue: _currentHealth,
+      size: indicatorSize,
+      priority: 10,
+      position: Vector2(width / 2 - indicatorSize.x / 2, -6),
     );
+
     add(_healthIndicator!);
   }
 
   void _initFireTimer() {
     _movingTimer = Timer(
       fireFrequency,
-      onTick: fire,
+      onTick: _fire,
       repeat: true,
     );
   }
 
-  void fire() {
+  void _fire() {
     if (isMounted && canFire) {
       final bullet = Bullet(
         position: Vector2(game.blockSize, game.blockSize / 2 - bulletRadius),

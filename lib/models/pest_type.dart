@@ -18,6 +18,17 @@ extension PestTypeExt on PestType {
     }
   }
 
+  int get health {
+    switch (this) {
+      case PestType.bunny:
+        return 154;
+      case PestType.snail:
+        return 126;
+      case PestType.turtle:
+        return 92;
+    }
+  }
+
   Vector2 get spriteSize {
     switch (this) {
       case PestType.bunny:

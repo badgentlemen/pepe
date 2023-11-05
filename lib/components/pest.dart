@@ -16,15 +16,12 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   Pest({
     required this.id,
     required super.position,
-    this.health = defaultHealth,
     this.type = PestType.bunny,
     this.value = defaultPestValue,
     this.damage = defaultDamage,
     this.delay = 5,
     this.dodgePercent = 0,
-  }) {
-    _currentHealth = health;
-  }
+  });
 
   late SpriteAnimation _idleAnimation;
 
@@ -49,13 +46,11 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   final double dodgePercent;
 
   /// Здоровье
-  final int health;
+  int get health => type.health;
 
-  bool isEffectWithPlant = false;
+  bool get isStopped => position.x <= 0 || _isEffectWithPlant;
 
-  bool get isStopped => position.x <= 0 || isEffectWithPlant;
-
-  bool isSlowDown = false;
+  bool _isEffectWithPlant = false;
 
   Timer? _movingTimer;
 
@@ -67,6 +62,9 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
   @override
   FutureOr<void> onLoad() {
+
+    _currentHealth = health;
+
     size = Vector2(game.blockSize, game.blockSize);
 
     _loadAllAnimations();
@@ -77,7 +75,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
     _addHealthIndicator();
 
     _movingTimer = Timer(
-      isSlowDown ? delay * 1.5 : delay,
+      delay,
       onTick: _move,
       repeat: true,
     );
@@ -101,7 +99,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
     }
 
     if (other is Plant) {
-      isEffectWithPlant = true;
+      _isEffectWithPlant = true;
 
       _plantEffectTimer ??= Timer(
         other.fireFrequency,
@@ -116,7 +114,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   @override
   void onCollisionEnd(PositionComponent other) {
     if (other is Plant) {
-      isEffectWithPlant = false;
+      _isEffectWithPlant = false;
       _disposePlantEffectTimer();
     }
 
@@ -124,15 +122,23 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   }
 
   void _addHitbox() {
-    add(RectangleHitbox());
+    add(
+      RectangleHitbox(
+        position: Vector2(0, 0),
+        size: Vector2(
+          game.blockSize,
+          game.blockSize,
+        ),
+      ),
+    );
   }
 
   void _addHealthIndicator() {
     final size = Vector2(game.blockSize * .7, 15);
 
     _healthIndicator = HealthIndicator(
-      value: _currentHealth,
-      max: health,
+      currentValue: _currentHealth,
+      maxValue: health,
       size: size,
       position: Vector2(width / 2 - size.x / 2, -6),
     );
@@ -158,7 +164,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
     current = PestAnimationType.idle;
   }
 
-  Future<void> _handleDamage(int damage) async {
+  void _handleDamage(int damage)  {
     if (health > 0) {
       _currentHealth = _currentHealth - damage;
       _onHit();

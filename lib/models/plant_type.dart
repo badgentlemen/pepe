@@ -63,10 +63,28 @@ extension PlantTypeExt on PlantType {
     }
   }
 
-  int get health => defaultHealth;
+  int get health {
+    switch (this) {
+      case PlantType.watermelon:
+        return 50;
+      case PlantType.corn:
+        return 80;
+      case PlantType.carrot:
+        return 120;
+    }
+  }
 
   /// Наносимый урон
-  int get damage => defaultDamage;
+  int get damage {
+    switch (this) {
+      case PlantType.watermelon:
+        return 8;
+      case PlantType.corn:
+        return 16;
+      case PlantType.carrot:
+        return 34;
+    }
+  }
 
   /// Стоимость
   int get costs {
@@ -93,5 +111,14 @@ extension PlantTypeExt on PlantType {
   }
 
   /// Частота удара + стрельбы
-  double get fireFrequency => 4;
+  double get fireFrequencySec {
+    switch (this) {
+      case PlantType.watermelon:
+        return 3;
+      case PlantType.corn:
+        return 6;
+      case PlantType.carrot:
+        return 8;
+    }
+  }
 }

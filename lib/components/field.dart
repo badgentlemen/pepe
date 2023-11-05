@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:pepe/components/pest.dart';
 import 'package:pepe/constants.dart';
-import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/p2p_game.dart';
 import 'package:pepe/components/square.dart';
 import 'package:pepe/utils.dart';
@@ -24,7 +23,7 @@ class Field extends RectangleComponent with HasGameRef<P2PGame> {
 
     _timer = Timer(
       1,
-      // onTick: _someRandom,
+      onTick: _someRandom,
       repeat: true,
     );
 
@@ -41,12 +40,11 @@ class Field extends RectangleComponent with HasGameRef<P2PGame> {
 
   void _sendPestAt(int row) {
     final position = Vector2(size.x - game.blockSize, row * game.blockSize);
-    final health = random(70, 120);
     final pest = Pest(
       id: const Uuid().v4(),
       position: position,
       delay: 6,
-      health: health,
+      type: randomPestType(),
     );
 
     game.pests.add(pest);
@@ -72,11 +70,9 @@ class Field extends RectangleComponent with HasGameRef<P2PGame> {
         final offsetY = row * game.blockSize;
         final offsetX = column * game.blockSize;
 
-        final randomType = PlantType.values[Random().nextInt(PlantType.values.length)];
-
         final square = Square(
           position: Vector2(offsetX, offsetY),
-          plantType: randomType,
+          plantType: randomPlantType(),
           column: column,
           row: row,
         );
