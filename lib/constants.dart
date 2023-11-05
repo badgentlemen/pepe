@@ -10,7 +10,6 @@ const double cloudFrequency = 8;
 const double defaultSpeed = 1;
 const double bulletRadius = 10;
 
-const double stepTime = 0.1;
 
 const blockSizeImpl = 23;
 const int fieldRows = 7;
@@ -25,6 +24,7 @@ const electricityColor = Color.fromARGB(255, 33, 61, 243);
 const sunPowerColor = Color.fromRGBO(255, 167, 38, 1);
 
 const bulletFps = 14;
+const pestFps = 0.05;
 
 const cardsRatio = 170 / 220;
 

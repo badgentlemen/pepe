@@ -77,7 +77,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
     _addHealthIndicator();
 
     _movingTimer = Timer(
-      stepTime,
+      pestFps,
       onTick: _move,
       repeat: true,
     );
@@ -165,7 +165,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
     }
 
     if (position.x != 0) {
-      position.x -= game.blockSize / (delay / stepTime);
+      position.x -= game.blockSize / (delay / pestFps);
     }
   }
 
