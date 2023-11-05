@@ -87,7 +87,7 @@ extension PlantTypeExt on PlantType {
   }
 
   /// Стоимость
-  int get costs {
+  int get price {
     switch (this) {
       case PlantType.watermelon:
         return 100;

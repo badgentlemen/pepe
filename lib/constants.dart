@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
+
 const defaultPestValue = 60;
 const defaultDamage = 20;
 const defaultHealth = 100;
 const defaultPower = 100;
 const systemPowerPerFrequency = 1;
-const int defaultPlantCosts = 150;
+const int defaultPlantPrice = 150;
 const double cloudFrequency = 8;
 const double defaultSpeed = 1;
 const double bulletRadius = 10;
@@ -14,10 +16,15 @@ const int fieldColumns = 16;
 const int solarPanels = 3;
 const int windTurbines = 3;
 
+const electricityColor = Color.fromARGB(255, 33, 61, 243);
+const sunPowerColor = Color.fromRGBO(255, 167, 38, 1);
+
 const bulletFps = 14;
 
+const cardsRatio = 170 / 220;
+
 const fieldAssetRatio = 1025 / 272;
-const plantCardRatio = 170 / 220;
+const airplaneAssetRatio = 407 / 267;
 const cloudAssetRatio = 958 / 641;
 const carrotAssetRatio = 580 / 539;
 const cornAssetRatio = 2479 / 3200;

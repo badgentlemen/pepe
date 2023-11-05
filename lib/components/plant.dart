@@ -26,7 +26,7 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
   int get damage => type.damage;
 
   /// Стоимость
-  int get costs => type.costs;
+  int get price => type.price;
 
   /// Частота удара + стрельбы
   double get fireFrequency => type.fireFrequencySec;

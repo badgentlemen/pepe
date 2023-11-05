@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
+import 'package:pepe/components/aiplane_card.dart';
 import 'package:pepe/components/bolt.dart';
 import 'package:pepe/components/cloud.dart';
 import 'package:pepe/components/field.dart';
@@ -18,6 +19,7 @@ import 'package:pepe/components/sun.dart';
 import 'package:pepe/components/time_progress_bar.dart';
 import 'package:pepe/components/wind_turbine.dart';
 import 'package:pepe/constants.dart';
+import 'package:pepe/models/airplane_type.dart';
 import 'package:pepe/models/plant_type.dart';
 
 const double resolutionAspect = 2319 / 1307;
@@ -70,8 +72,8 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
 
   double get cloudWidth => blockSize * 1.6;
 
-  double get plantCardWidth => blockSize * 1.6;
-  double get plantCardHeight => plantCardWidth / plantCardRatio;
+  double get cardsWidth => blockSize * 1.6;
+  double get cardsHeight => cardsWidth / cardsRatio;
 
   double get timingWidth => size.x / 4;
 
@@ -98,6 +100,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
     _addPowerSun();
     _addPowerLabel();
     _addPlantCards();
+    _addPlaneCards();
     _addGenerator();
     _addElectricityLabel();
     _addWindTurbines();
@@ -142,11 +145,29 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
 
       add(
         PlantCard(
-          position: Vector2(dashboardPosition.x + (plantCardWidth + 10) * i, dashboardPosition.y),
+          position: Vector2(dashboardPosition.x + (cardsWidth + 10) * i, dashboardPosition.y),
           type: type,
         ),
       );
     }
+  }
+
+  void _addPlaneCards() {
+    final y = dashboardPosition.y;
+
+    add(
+      AirplaneCard(
+        type: AirplaneType.manure,
+        position: Vector2(generatorPosition.x - cardsWidth - 10 - cardsWidth - 20, y),
+      ),
+    );
+
+    add(
+      AirplaneCard(
+        type: AirplaneType.chemical,
+        position: Vector2(generatorPosition.x - cardsWidth - 20, y),
+      ),
+    );
   }
 
   void _addSolars() {
@@ -225,7 +246,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
   void _addElectricityLabel() {
     electricityLabel = Label(
         text: electricity.toString(),
-        color: Colors.blue.shade900,
+        color: electricityColor,
         size: labelsSize,
         position: electricityLabelPosition);
 

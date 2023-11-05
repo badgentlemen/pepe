@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:pepe/components/flame_text.dart';
 import 'package:pepe/components/sun.dart';
+import 'package:pepe/constants.dart';
 import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/p2p_game.dart';
 import 'package:pepe/utils.dart';
@@ -16,9 +17,9 @@ class PlantCard extends RectangleComponent with HasGameRef<P2PGame> {
 
   final PlantType type;
 
-  String get costs => type.costs.toString();
+  String get priceString => type.price.toString();
 
-  int get countWeCanBuy => (game.sunPower / type.costs).floor();
+  int get countWeCanBuy => (game.sunPower / type.price).floor();
 
   String get countWeCanBuyString => countWeCanBuy.toString();
 
@@ -57,7 +58,7 @@ class PlantCard extends RectangleComponent with HasGameRef<P2PGame> {
 
   @override
   FutureOr<void> onLoad() {
-    size = Vector2(game.plantCardWidth, game.plantCardHeight);
+    size = Vector2(game.cardsWidth, game.cardsHeight);
     priority = 3;
 
     paintLayers = [
@@ -85,7 +86,7 @@ class PlantCard extends RectangleComponent with HasGameRef<P2PGame> {
 
   void _addInfoField() {
     final infoFieldPosition = Vector2(0, size.y - infoFieldSize.y);
-    final costsTextSize = fetchTextSizeByStyle(costs, FlameText.textStyle);
+    final priceTextSize = fetchTextSizeByStyle(priceString, FlameText.textStyle);
     final sunSize = Vector2(infoFieldSize.y, infoFieldSize.y);
 
     final infoField = RectangleComponent(
@@ -99,13 +100,13 @@ class PlantCard extends RectangleComponent with HasGameRef<P2PGame> {
       ],
     );
 
-    final costsLabel = FlameText(
-      position: Vector2(infoFieldSize.x / 2 - costsTextSize.width / 2 + sunSize.x / 2 + 5,
-          infoFieldSize.y / 2 - costsTextSize.height / 2),
-      color: Colors.orange,
-    )..text = costs;
+    final priceLabel = FlameText(
+      position: Vector2(infoFieldSize.x / 2 - priceTextSize.width / 2 + sunSize.x / 2 + 5,
+          infoFieldSize.y / 2 - priceTextSize.height / 2),
+      color: sunPowerColor,
+    )..text = priceString;
 
-    infoField.add(costsLabel);
+    infoField.add(priceLabel);
 
     infoField.add(
       Sun(
@@ -132,10 +133,12 @@ class PlantCard extends RectangleComponent with HasGameRef<P2PGame> {
   void _addAvatar() {
     add(
       SpriteComponent(
-        sprite: type.fetchSprite(game.images),
-        size: avatarSize,
-        position: Vector2(width / 2 - avatarSize.x / 2, payloadBlockHeight / 2 - avatarSize.y / 2,)
-      ),
+          sprite: type.fetchSprite(game.images),
+          size: avatarSize,
+          position: Vector2(
+            width / 2 - avatarSize.x / 2,
+            payloadBlockHeight / 2 - avatarSize.y / 2,
+          )),
     );
   }
 

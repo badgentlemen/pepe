@@ -1,5 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
+import 'package:pepe/constants.dart';
 
 class Label extends TextBoxComponent {
   Label({
@@ -22,7 +23,7 @@ class Label extends TextBoxComponent {
     textRenderer = TextPaint(
       style: TextStyle(
         fontWeight: FontWeight.w900,
-        color: color ?? Colors.orange.shade400,
+        color: color ?? sunPowerColor,
         fontSize: 14,
         height: 1,
       ),
