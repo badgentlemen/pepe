@@ -12,8 +12,6 @@ class Fence extends SpriteComponent with HasGameRef<P2PGame> {
 
   @override
   FutureOr<void> onLoad() {
-    debugMode = true;
-
     size = Vector2(game.fenceWidth, game.fenceWidth * .9);
 
     sprite = Sprite(

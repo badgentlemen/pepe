@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:pepe/components/airplane.dart';
 import 'package:pepe/components/bolt.dart';
 import 'package:pepe/constants.dart';
@@ -10,7 +11,7 @@ import 'package:pepe/models/airplane_type.dart';
 import 'package:pepe/p2p_game.dart';
 import 'package:pepe/utils.dart';
 
-class AirplaneCard extends RectangleComponent with TapCallbacks,HasGameRef<P2PGame> {
+class AirplaneCard extends RectangleComponent with TapCallbacks, HasGameRef<P2PGame> {
   AirplaneCard({
     required this.type,
     super.position,
@@ -21,6 +22,8 @@ class AirplaneCard extends RectangleComponent with TapCallbacks,HasGameRef<P2PGa
   double get _boltWidth => width / 8;
 
   double get _boltSpace => 3;
+
+  bool get canSend => game.level != null ? game.level!.electricity >= type.price : false;
 
   TextStyle get _titleTextStyle => TextStyle(
         fontWeight: FontWeight.w900,
@@ -120,7 +123,17 @@ class AirplaneCard extends RectangleComponent with TapCallbacks,HasGameRef<P2PGa
     addAll([textComponent, bolt]);
   }
 
-  void _handleTapped() {
+  Future<void> _handleTapped() async {
+    if (isMounted && game.buildContext != null && canSend) {
+      final result = await FlutterPlatformAlert.showAlert(
+        windowTitle: 'Отправить самолет с "${type.title}"',
+        text: '',
+        alertStyle: AlertButtonStyle.okCancel,
+      );
 
+      if (result == AlertButton.okButton) {
+        print('отправляем. вжжжжж');
+      }
+    }
   }
 }

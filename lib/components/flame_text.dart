@@ -21,8 +21,6 @@ class FlameText extends TextComponent with HasGameRef<P2PGame> {
 
   @override
   FutureOr<void> onLoad() {
-    debugMode = true;
-
     textRenderer = TextPaint(
       style: TextStyle(
         color: color,
