@@ -22,11 +22,9 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
     this.delay = 5,
   });
 
-  late SpriteAnimation _idleAnimation;
+  late SpriteAnimation _runAnimation;
 
   late SpriteAnimation _hitAnimation;
-
-  SpriteAnimation? _runAnimtion;
 
   /// Тип вредителя
   final PestType type;
@@ -171,10 +169,8 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
   Future<void> _onHit() async {
     current = PestAnimationType.hit;
-
-    await Future.delayed(Duration(seconds: (1 / PestAnimationType.hit.amount).floor()));
-
-    current = _runAnimtion != null ? PestAnimationType.run : PestAnimationType.idle;
+    await Future.delayed(Duration(seconds: (1 / type.hitAnimationAmount).floor()));
+    current = PestAnimationType.run;
   }
 
   void _handleDamage(int damage) {
@@ -199,12 +195,12 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   }
 
   void _loadAllAnimations() {
-    _idleAnimation = fetchAmimation(
+    _runAnimation = fetchAmimation(
       game.images,
       of: type.title,
-      type: 'Idle',
+      type: 'Run',
       size: type.spriteSize,
-      amount: PestAnimationType.idle.amount,
+      amount: type.runAnimationAmount,
     );
 
     _hitAnimation = fetchAmimation(
@@ -212,25 +208,14 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
       of: type.title,
       type: 'Hit',
       size: type.spriteSize,
-      amount: PestAnimationType.hit.amount,
+      amount: type.hitAnimationAmount,
     );
 
-    if (type == PestType.bunny) {
-      _runAnimtion = fetchAmimation(
-        game.images,
-        of: type.title,
-        type: 'Run',
-        size: type.spriteSize,
-        amount: PestAnimationType.run.amount,
-      );
-    }
-
     animations = {
-      PestAnimationType.idle: _idleAnimation,
+      PestAnimationType.run: _runAnimation,
       PestAnimationType.hit: _hitAnimation,
-      if (_runAnimtion != null) PestAnimationType.run: _runAnimtion!,
     };
 
-    current = _runAnimtion != null ? PestAnimationType.run : PestAnimationType.idle;
+    current = PestAnimationType.run;
   }
 }

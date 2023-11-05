@@ -25,22 +25,8 @@ class GameApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: Scaffold(
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Positioned(
-            //   left: 0,
-            //   bottom: -120,
-            //   right: 0,
-            //   child: Image.asset(
-            //     'assets/images/field.png',
-            //     fit: BoxFit.cover,
-            //   ),
-            // ),
-            GameWidget(
-              game: P2PGame(),
-            ),
-          ],
+        body: GameWidget(
+          game: P2PGame(),
         ),
       ),
     );

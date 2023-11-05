@@ -24,7 +24,7 @@ const electricityColor = Color.fromARGB(255, 33, 61, 243);
 const sunPowerColor = Color.fromRGBO(255, 167, 38, 1);
 
 const bulletFps = 14;
-const pestFps = 0.05;
+const pestFps = 0.1;
 
 const cardsRatio = 170 / 220;
 

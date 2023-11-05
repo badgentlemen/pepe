@@ -2,8 +2,8 @@ import 'package:flame/components.dart';
 
 enum PestType {
   bunny,
-  snail,
-  turtle,
+  slime,
+  pig,
 }
 
 extension PestTypeExt on PestType {
@@ -11,10 +11,30 @@ extension PestTypeExt on PestType {
     switch (this) {
       case PestType.bunny:
         return 20;
-      case PestType.snail:
+      case PestType.slime:
         return 15;
-      case PestType.turtle:
+      case PestType.pig:
         return 8;
+    }
+  }
+
+  int get hitAnimationAmount {
+    switch (this) {
+      case PestType.bunny:
+      case PestType.pig:
+        return 5;
+      case PestType.slime:
+        return 5;
+    }
+  }
+
+  int get runAnimationAmount {
+    switch (this) {
+      case PestType.bunny:
+      case PestType.pig:
+        return 12;
+      case PestType.slime:
+        return 10;
     }
   }
 
@@ -22,9 +42,9 @@ extension PestTypeExt on PestType {
     switch (this) {
       case PestType.bunny:
         return 36;
-      case PestType.snail:
+      case PestType.slime:
         return 24;
-      case PestType.turtle:
+      case PestType.pig:
         return 12;
     }
   }
@@ -33,10 +53,10 @@ extension PestTypeExt on PestType {
     switch (this) {
       case PestType.bunny:
         return 'Bunny';
-      case PestType.snail:
-        return 'Snail';
-      case PestType.turtle:
-        return 'Turtle';
+      case PestType.slime:
+        return 'Slime';
+      case PestType.pig:
+        return 'Pig';
     }
   }
 
@@ -44,9 +64,9 @@ extension PestTypeExt on PestType {
     switch (this) {
       case PestType.bunny:
         return 154;
-      case PestType.snail:
+      case PestType.slime:
         return 126;
-      case PestType.turtle:
+      case PestType.pig:
         return 92;
     }
   }
@@ -55,10 +75,10 @@ extension PestTypeExt on PestType {
     switch (this) {
       case PestType.bunny:
         return Vector2(34, 44);
-      case PestType.snail:
-        return Vector2(38, 24);
-      case PestType.turtle:
-        return Vector2(44, 26);
+      case PestType.slime:
+        return Vector2(44, 30);
+      case PestType.pig:
+        return Vector2(36, 30);
     }
   }
 }
