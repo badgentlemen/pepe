@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+const defaultSunPower = 100;
+const defaultElectricity = 100;
+const defaultLevelDuration = Duration(minutes: 2, seconds: 30);
+
 const defaultPestValue = 60;
 const defaultDamage = 20;
 const defaultHealth = 100;

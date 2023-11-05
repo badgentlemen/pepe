@@ -20,16 +20,19 @@ import 'package:pepe/models/level_script.dart';
 import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/p2p_game.dart';
 
-class Level extends World with HasGameRef<P2PGame> {
-  Level({required this.script});
+class Level extends RectangleComponent with HasGameRef<P2PGame> {
+  Level({required this.script}) {
+    sunPower = script.sunPower;
+    electricity = script.electricity;
+  }
 
   final LevelScript script;
 
   /// Собранная сила солнца
-  int sunPower = 500;
+  int sunPower = 0;
 
   /// Собранная сила ветра
-  int electricity = 200;
+  int electricity = 0;
 
   bool isSunBlocked = false;
 
@@ -45,6 +48,7 @@ class Level extends World with HasGameRef<P2PGame> {
 
   @override
   FutureOr<void> onLoad() {
+
     _addHill();
     _addSolars();
     _addField();
@@ -238,5 +242,9 @@ class Level extends World with HasGameRef<P2PGame> {
     if (electricity > 0) {
       electricity = max(0, electricity - other);
     }
+  }
+
+  void dispose() {
+    removeFromParent();
   }
 }

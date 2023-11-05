@@ -27,6 +27,7 @@ class GameApp extends StatelessWidget {
       ),
       home: Scaffold(
         body: GameWidget(
+          
           game: P2PGame(),
         ),
       ),

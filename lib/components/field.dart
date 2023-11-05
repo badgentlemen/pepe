@@ -27,18 +27,17 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
 
     _timer = Timer(
       1,
-      onTick: _someRandom,
+      onTick: () {
+
+      },
       repeat: true,
     );
-
-    _sendPestAt(0);
 
     return super.onLoad();
   }
 
   @override
   void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
-
     if (other is Bullet) {
       other.removeFromParent();
     }
@@ -81,30 +80,6 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
         size: Vector2(width, 2),
       ),
     );
-  }
-
-  void _sendPestAt(int row) {
-    final position = Vector2(size.x - game.blockSize, row * game.blockSize);
-    final pest = Pest(
-      id: const Uuid().v4(),
-      position: position,
-      delay: 6,
-      type: randomPestType(),
-    );
-
-    game.level?.pests.add(pest);
-    add(pest);
-  }
-
-  void _someRandom() {
-    final next = Random().nextDouble();
-
-    if (next > .95) {
-      final randomRow = Random().nextInt(fieldRows);
-      _sendPestAt(
-        randomRow,
-      );
-    }
   }
 
   void _buildNet() {
