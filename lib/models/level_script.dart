@@ -3,13 +3,13 @@ import 'package:pepe/models/scripted_pest.dart';
 
 class LevelScript {
   LevelScript({
-    this.scriptedPest = const [],
+    this.scriptedPests = const [],
     this.electricity = defaultElectricity,
     this.sunPower = defaultSunPower,
     this.timeDuration = defaultLevelDuration,
   });
 
-  final List<ScriptedPest> scriptedPest;
+  final List<ScriptedPest> scriptedPests;
 
   final int sunPower;
 

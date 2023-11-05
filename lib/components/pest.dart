@@ -11,16 +11,15 @@ import 'package:pepe/models/pest_animation_type.dart';
 import 'package:pepe/models/pest_type.dart';
 import 'package:pepe/p2p_game.dart';
 import 'package:pepe/utils.dart';
+import 'package:uuid/uuid.dart';
 
 /// Общий класс вредителя
 class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, CollisionCallbacks {
   Pest({
-    required this.id,
-    required super.position,
     this.type = PestType.bunny,
-    this.value = defaultPestValue,
+    super.position,
     this.delay = 5,
-  });
+  }) : id = 'pest-${const Uuid().v4()}';
 
   late SpriteAnimation _runAnimation;
 
@@ -32,11 +31,11 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   /// Идентификатор
   final String id;
 
-  /// Скорость передвижения
+  /// Скорость передвижения (секунды за которые вредитель успевает пройти путь [game.blockSize])
   final double delay;
 
   /// Цена за уничтожение
-  final int value;
+  int get reward => type.reward;
 
   /// Вероятность уклонения от атаки
   int get dodgePercent => type.dodgePercent;

@@ -7,6 +7,29 @@ enum PestType {
 }
 
 extension PestTypeExt on PestType {
+
+  int get damageFromChemical {
+    switch (this) {
+      case PestType.bunny:
+        return 85;
+      case PestType.slime:
+        return 55;
+      case PestType.pig:
+        return 35;
+    }
+  }
+
+  int get reward {
+    switch (this) {
+      case PestType.bunny:
+        return 85;
+      case PestType.slime:
+        return 55;
+      case PestType.pig:
+        return 35;
+    }
+  }
+
   int get damage {
     switch (this) {
       case PestType.bunny:
@@ -41,11 +64,11 @@ extension PestTypeExt on PestType {
   int get dodgePercent {
     switch (this) {
       case PestType.bunny:
-        return 36;
-      case PestType.slime:
-        return 24;
-      case PestType.pig:
         return 12;
+      case PestType.slime:
+        return 7;
+      case PestType.pig:
+        return 4;
     }
   }
 

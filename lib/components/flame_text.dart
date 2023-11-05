@@ -6,7 +6,8 @@ import 'package:pepe/p2p_game.dart';
 
 class FlameText extends TextComponent with HasGameRef<P2PGame> {
   FlameText({
-    required super.position,
+    super.position,
+    super.size,
     this.color = Colors.black,
   });
 
@@ -20,6 +21,8 @@ class FlameText extends TextComponent with HasGameRef<P2PGame> {
 
   @override
   FutureOr<void> onLoad() {
+    debugMode = true;
+
     textRenderer = TextPaint(
       style: TextStyle(
         color: color,

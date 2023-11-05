@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
@@ -7,15 +6,21 @@ import 'package:pepe/components/bullet.dart';
 import 'package:pepe/components/field_border.dart';
 import 'package:pepe/components/pest.dart';
 import 'package:pepe/constants.dart';
+import 'package:pepe/models/pest_type.dart';
+import 'package:pepe/models/scripted_pest.dart';
 import 'package:pepe/p2p_game.dart';
 import 'package:pepe/components/square.dart';
 import 'package:pepe/utils.dart';
-import 'package:uuid/uuid.dart';
 
 class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallbacks {
-  Field();
+  Field({this.sciptedPests = const []});
+
+  List<ScriptedPest> sciptedPests;
 
   Timer? _timer;
+
+  List<ScriptedPest> get _pestsForNow =>
+      sciptedPests.where((sciptedPest) => sciptedPest.delayDurationSec == game.level?.startedDateTimeSec).toList();
 
   @override
   FutureOr<void> onLoad() {
@@ -24,14 +29,6 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
 
     _buildNet();
     _addBorders();
-
-    _timer = Timer(
-      1,
-      onTick: () {
-
-      },
-      repeat: true,
-    );
 
     return super.onLoad();
   }
@@ -45,11 +42,37 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
     super.onCollisionStart(intersectionPoints, other);
   }
 
-
   @override
   void update(double dt) {
     _timer?.update(dt);
+    _handlePestSending();
     super.update(dt);
+  }
+
+  void _handlePestSending() {
+    if (game.level == null) {
+      return;
+    }
+
+    if (_pestsForNow.isNotEmpty) {
+      List<ScriptedPest> copied = [..._pestsForNow];
+
+      sciptedPests.removeWhere((element) => copied.map((e) => e.pest.id).contains(element.pest.id));
+
+      for (var scriptedPest in copied) {
+        _sendPestAtRow(
+          pest: scriptedPest.pest,
+          row: scriptedPest.row,
+        );
+      }
+    }
+  }
+
+  void _sendPestAtRow({required Pest pest, required int row}) {
+    pest.position = Vector2(size.x - game.blockSize, row * game.blockSize);
+
+    game.level?.pests.add(pest);
+    add(pest);
   }
 
   void _addBorders() {

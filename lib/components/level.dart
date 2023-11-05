@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
 import 'package:pepe/components/aiplane_card.dart';
 import 'package:pepe/components/bolt.dart';
 import 'package:pepe/components/cloud.dart';
 import 'package:pepe/components/field.dart';
+import 'package:pepe/components/flame_text.dart';
 import 'package:pepe/components/label.dart';
 import 'package:pepe/components/pest.dart';
 import 'package:pepe/components/plant_card.dart';
@@ -19,12 +21,17 @@ import 'package:pepe/models/airplane_type.dart';
 import 'package:pepe/models/level_script.dart';
 import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/p2p_game.dart';
+import 'package:uuid/uuid.dart';
 
 class Level extends RectangleComponent with HasGameRef<P2PGame> {
-  Level({required this.script}) {
+  Level({
+    required this.script,
+  }) : id = 'level-${const Uuid().v4()}' {
     sunPower = script.sunPower;
     electricity = script.electricity;
   }
+
+  final String id;
 
   final LevelScript script;
 
@@ -34,11 +41,16 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
   /// Собранная сила ветра
   int electricity = 0;
 
+  /// Солнце затянуто облаками
   bool isSunBlocked = false;
 
+  /// Список полей на игральной доске
   List<List<Square>> fieldSquares = [];
 
+  /// Список вредителей на игральной доске
   List<Pest> pests = [];
+
+  int killedPests = 0;
 
   Timer? _cloudTimer;
 
@@ -46,21 +58,41 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
 
   late Label electricityLabel;
 
+  late FlameText dateLabel;
+
+  late DateTime startedDateTime;
+
+  int get startedDateTimeSec => DateTime.now().difference(startedDateTime).inSeconds;
+
   @override
   FutureOr<void> onLoad() {
+    startedDateTime = DateTime.now();
 
-    _addHill();
-    _addSolars();
-    _addField();
-    _addPrimarySun();
-    _handleClouds();
-    _addPowerSun();
-    _addPowerLabel();
-    _addPlantCards();
-    _addPlaneCards();
-    _addGenerator();
-    _addElectricityLabel();
-    _addWindTurbines();
+    dateLabel = FlameText(
+
+      position: Vector2(width / 2, 10),
+      size: Vector2(60, 20),
+      color: Colors.black,
+    );
+
+    add(dateLabel);
+
+    try {
+      _addHill();
+      _addSolars();
+      _addField();
+      _addPrimarySun();
+      _handleClouds();
+      _addPowerSun();
+      _addPowerLabel();
+      _addPlantCards();
+      _addPlaneCards();
+      _addGenerator();
+      _addElectricityLabel();
+      _addWindTurbines();
+    } catch (e) {
+      print(e);
+    }
 
     return super.onLoad();
   }
@@ -69,6 +101,7 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
   void update(double dt) {
     _cloudTimer?.update(dt);
     powerLabel.text = sunPower.toString();
+    dateLabel.text = startedDateTimeSec.toString();
     electricityLabel.text = electricity.toString();
     super.update(dt);
   }
@@ -140,7 +173,8 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
 
   void _addWindTurbines() {
     for (var i = 0; i < windTurbines; i++) {
-      final next = Vector2(game.windTurbinePosition.x + (i * (game.windTurbineSize.x + game.windTurbineSpace)), game.windTurbinePosition.y);
+      final next = Vector2(game.windTurbinePosition.x + (i * (game.windTurbineSize.x + game.windTurbineSpace)),
+          game.windTurbinePosition.y);
 
       add(
         WindTurbine(
@@ -152,7 +186,9 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
   }
 
   void _addField() {
-    final field = Field();
+    final field = Field(
+      sciptedPests: script.scriptedPests,
+    );
     add(field);
   }
 
@@ -200,7 +236,10 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
 
   void _addElectricityLabel() {
     electricityLabel = Label(
-        text: electricity.toString(), color: electricityColor, size: game.labelsSize, position: game.electricityLabelPosition);
+        text: electricity.toString(),
+        color: electricityColor,
+        size: game.labelsSize,
+        position: game.electricityLabelPosition);
 
     add(electricityLabel);
 
@@ -220,7 +259,8 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
   }
 
   void onPestKill(Pest pest) {
-    increaseSunPower(pest.value);
+    killedPests += 1;
+    increaseSunPower(pest.reward);
     pests.removeWhere((pest) => pest.id == pest.id);
   }
 

@@ -9,7 +9,9 @@ Future<void> main() async {
   await Flame.device.fullScreen();
   await Flame.device.setLandscape();
 
-  runApp(const GameApp());
+  const game = GameApp();
+
+  runApp(game);
 }
 
 class GameApp extends StatelessWidget {
@@ -27,7 +29,7 @@ class GameApp extends StatelessWidget {
       ),
       home: Scaffold(
         body: GameWidget(
-          
+
           game: P2PGame(),
         ),
       ),

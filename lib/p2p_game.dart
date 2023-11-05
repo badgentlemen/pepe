@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
 import 'package:pepe/components/level.dart';
 import 'package:pepe/components/solar_panel.dart';
 import 'package:pepe/constants.dart';
+import 'package:pepe/mock_level_scripts.dart';
 import 'package:pepe/models/level_script.dart';
 
 class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDraggablesBridge {
@@ -49,6 +49,11 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
 
   double get timingWidth => size.x / 4;
 
+  final List<Level> _presetLevels = [
+    Level(script: firstLevelScript),
+    Level(script: secondLevelScript),
+  ];
+
   String? loadImagesError;
 
   Level? level;
@@ -64,13 +69,17 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
       loadImagesError = e.toString();
     }
 
-    _runLevel();
+    _runLevelAt(0);
 
     return super.onLoad();
   }
 
-  void _runLevel() {
-    level = Level(script: LevelScript());
-    addAll([level!]);
+  void _runLevelAt(int index) {
+    level?.removeFromParent();
+
+    try {
+      level = _presetLevels[index];
+      add(level!);
+    } catch (e) {}
   }
 }
