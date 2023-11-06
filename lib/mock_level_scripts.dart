@@ -54,6 +54,16 @@ final firstLevelScript = LevelScript(
     ),
     ScriptedPest(
       pest: Pest(type: PestType.slime),
+      delayDuration: const Duration(seconds: 140),
+      row: 5,
+    ),
+    ScriptedPest(
+      pest: Pest(type: PestType.pig),
+      delayDuration: const Duration(seconds: 115),
+      row: 6,
+    ),
+    ScriptedPest(
+      pest: Pest(type: PestType.slime),
       delayDuration: const Duration(seconds: 105),
       row: 4,
     ),

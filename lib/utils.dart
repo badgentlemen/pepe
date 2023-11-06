@@ -50,6 +50,18 @@ int random(int min, int max) {
   return min + Random().nextInt(max - min);
 }
 
+extension DurationFormatter on Duration {
+  String minuteAndSeconds() {
+    toString();
+    return [
+      inMinutes.remainder(60),
+      inSeconds.remainder(60)
+    ].map((seg) {
+      return seg.toString().padLeft(2, '0');
+    }).join(':');
+  }
+}
+
 PestType randomPestType() => PestType.values[Random().nextInt(PestType.values.length)];
 
 PlantType randomPlantType() => PlantType.values[Random().nextInt(PlantType.values.length)];

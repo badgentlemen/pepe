@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pepe/models/random_range.dart';
 
 const defaultSunPower = 250;
 const defaultElectricity = 250;
 const defaultLevelDuration = Duration(minutes: 2, seconds: 30);
 
+const defaultCloudRandomRange = RandomRange(less: .3, over: .75);
 const defaultPestValue = 60;
 const defaultDamage = 20;
 const defaultHealth = 100;
@@ -13,7 +15,6 @@ const int defaultPlantPrice = 150;
 const double cloudFrequency = 8;
 const double defaultSpeed = 1;
 const double bulletRadius = 8;
-
 
 const blockSizeImpl = 23;
 const int fieldRows = 7;

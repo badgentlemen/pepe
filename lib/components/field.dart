@@ -20,7 +20,7 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
   Timer? _timer;
 
   List<ScriptedPest> get _pestsForNow =>
-      sciptedPests.where((sciptedPest) => sciptedPest.delayDurationSec == game.level?.startedDateTimeSec).toList();
+      sciptedPests.where((sciptedPest) => sciptedPest.delayDurationSec == game.level?.completedDurationSec).toList();
 
   @override
   FutureOr<void> onLoad() {
@@ -45,6 +45,14 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
 
   @override
   void update(double dt) {
+    if (game.level == null) {
+      return;
+    }
+
+    if (game.level!.isCompleted) {
+      return;
+    }
+
     _timer?.update(dt);
     _handlePestSending();
     super.update(dt);
@@ -70,6 +78,18 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
   }
 
   void _sendPestAtRow({required Pest pest, required int row}) {
+    if (!isMounted) {
+      return;
+    }
+
+    if (game.level == null) {
+      return;
+    }
+
+    if (game.level!.isCompleted) {
+      return;
+    }
+
     pest.position = Vector2(size.x - game.blockSize, row * game.blockSize);
 
     add(pest);
@@ -108,15 +128,15 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
 
         void addFence(double positionX) {
           add(
-          Fence(
-            position: Vector2(
-              positionX,
-              positionY,
+            Fence(
+              position: Vector2(
+                positionX,
+                positionY,
+              ),
+              priority: 3,
+              angle: 1.55,
             ),
-            priority: 3,
-            angle: 1.55,
-          ),
-        );
+          );
         }
 
         addFence(game.fenceHeight / 2.3);

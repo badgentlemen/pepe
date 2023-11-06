@@ -58,6 +58,10 @@ class Bullet extends CircleComponent with CollisionCallbacks, HasGameRef<P2PGame
   }
 
   void _move() {
+    if (game.level?.isCompleted == true) {
+      return;
+    }
+
     position.x += width / bulletFps;
   }
 }
