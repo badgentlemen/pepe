@@ -124,7 +124,7 @@ class AirplaneCard extends RectangleComponent with TapCallbacks, HasGameRef<P2PG
   }
 
   Future<void> _handleTapped() async {
-    if (isMounted && game.buildContext != null) {
+    if (isMounted) {
       if (game.level == null) {
         return;
       }

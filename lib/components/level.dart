@@ -61,6 +61,9 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
   /// Количество убитый вредителей на уровне
   int killedPests = 0;
 
+  /// Один или несколько вредителей дошли до границы поля
+  bool pestReachedBorder = false;
+
   /// Таймер для отправки облаков по небу
   Timer? _cloudTimer;
 
@@ -94,10 +97,10 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
   bool get allEnemiesDead => killedPests >= sciptedPestCount;
 
   /// Уровень успешно пройден
-  bool get isWin => allEnemiesDead;
+  bool get isWin => allEnemiesDead && !pestReachedBorder;
 
   /// Уровень окончен
-  bool get isCompleted => killedPests >= 1;
+  bool get isCompleted => allEnemiesDead || pestReachedBorder;
 
   late Label powerLabel;
 
@@ -153,20 +156,7 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
     super.update(dt);
   }
 
-  bool canSendPlane(AirplaneType type) {
-    if (isCompleted) {
-      return false;
-    }
-
-    return electricity >= type.price;
-  }
-
-  void _updateKilledPestsRemainingLabel() {
-    pestsKilledRemainingLabel.text = killedPestsRemaining;
-    pestsKilledRemainingLabel.size = Vector2(killedPestsRemainingSize.width, killedPestsRemainingSize.height);
-    pestsKilledRemainingLabel.position = Vector2(game.size.x / 2 - pestsKilledRemainingLabel.width / 2, 10);
-  }
-
+  /// ADD COMPONENTS
   void _addHill() {
     add(SpriteComponent(
       sprite: Sprite(game.images.fromCache('hill.png')),
@@ -315,9 +305,45 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
 
   void _addPrimarySun() => add(PrimarySun());
 
-  void _checkGameCompleted() {
+  /// LOGIC METHODS
+  bool canSendPlane(AirplaneType type) {
+    if (isCompleted) {
+      return false;
+    }
+
+    return electricity >= type.price;
+  }
+
+  void _updateKilledPestsRemainingLabel() {
+    pestsKilledRemainingLabel.text = killedPestsRemaining;
+    pestsKilledRemainingLabel.size = Vector2(killedPestsRemainingSize.width, killedPestsRemainingSize.height);
+    pestsKilledRemainingLabel.position = Vector2(game.size.x / 2 - pestsKilledRemainingLabel.width / 2, 10);
+  }
+
+  Future<void> _checkGameCompleted() async {
     if (!isCompleted) {
       return;
+    }
+
+    if (isWin) {
+      final result = await FlutterPlatformAlert.showAlert(
+        windowTitle: 'ВЫ ВЫИГРАЛИ',
+        text: 'Вы сумели защитить поле от вредителей. Продолжаем дальше?',
+        alertStyle: AlertButtonStyle.okCancel,
+      );
+
+      /// TODO: обработка перехода на следующий уровень
+      if (result == AlertButton.okButton) {
+
+      } {
+
+      }
+
+    } else {
+      FlutterPlatformAlert.showAlert(
+        windowTitle: 'ВЫ ПРОИГРАЛИ',
+        text: 'Один или несколько вредителей прошли поле',
+      );
     }
   }
 
@@ -331,6 +357,13 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
     pests.removeWhere((element) => element.id == pest.id);
 
     _checkGameCompleted();
+  }
+
+  void onPestReachBorder(Pest pest) {
+    if (!pestReachedBorder) {
+      pestReachedBorder = true;
+      _checkGameCompleted();
+    }
   }
 
   void onPestAdd(Pest pest) {

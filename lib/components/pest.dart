@@ -164,8 +164,13 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
       return;
     }
 
-    if (position.x != 0) {
-      position.x -= game.blockSize / (delay / pestFps);
+    if (position.x > 0) {
+      final next = max(position.x - game.blockSize / (delay / pestFps), 0).toDouble();
+      position.x = next;
+    }
+
+    if (position.x <= 0) {
+      game.level?.onPestReachBorder(this);
     }
   }
 

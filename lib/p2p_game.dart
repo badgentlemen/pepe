@@ -52,14 +52,15 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
 
   double get timingWidth => size.x / 4;
 
-  final List<Level> _presetLevels = [
-    Level(script: firstLevelScript),
-    Level(script: secondLevelScript),
-  ];
+  bool get hasNext => false;
+
+  List<Level> _presetLevels = [];
 
   String? loadImagesError;
 
   Level? level;
+
+  int _index = 0;
 
   @override
   Color backgroundColor() => Colors.transparent;
@@ -72,9 +73,18 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
       loadImagesError = e.toString();
     }
 
+    _presetLevels = [
+      Level(script: firstLevelScript),
+      Level(script: secondLevelScript),
+    ];
+
     _runLevelAt(0);
 
     return super.onLoad();
+  }
+
+  void _runNextLevel() {
+
   }
 
   void _runLevelAt(int index) {
@@ -82,6 +92,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
 
     try {
       level = _presetLevels[index];
+      _index = index;
       add(level!);
     } catch (e) {}
   }
