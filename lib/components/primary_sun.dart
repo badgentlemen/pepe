@@ -8,6 +8,10 @@ import 'package:pepe/components/sun.dart';
 class PrimarySun extends Sun with CollisionCallbacks {
   PrimarySun() : super(position: Vector2.zero(), size: Vector2.zero());
 
+  static const double delay = 7;
+
+  Timer? _timer;
+
   @override
   FutureOr<void> onLoad() {
     position = game.primarySunPosition;
@@ -15,6 +19,15 @@ class PrimarySun extends Sun with CollisionCallbacks {
 
     add(CircleHitbox());
     return super.onLoad();
+  }
+
+  @override
+  void update(double dt) {
+    if (game.level?.isCompleted != true) {
+      _timer?.update(dt);
+    }
+
+    super.update(dt);
   }
 
   @override

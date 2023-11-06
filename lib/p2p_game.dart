@@ -83,9 +83,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
     return super.onLoad();
   }
 
-  void _runNextLevel() {
-
-  }
+  void _runNextLevel() {}
 
   void _runLevelAt(int index) {
     level?.removeFromParent();

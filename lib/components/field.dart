@@ -7,6 +7,7 @@ import 'package:pepe/components/fence.dart';
 import 'package:pepe/components/field_border.dart';
 import 'package:pepe/components/pest.dart';
 import 'package:pepe/constants.dart';
+import 'package:pepe/models/pest_type.dart';
 import 'package:pepe/models/scripted_pest.dart';
 import 'package:pepe/p2p_game.dart';
 import 'package:pepe/components/square.dart';
@@ -66,18 +67,18 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
     if (_pestsForNow.isNotEmpty) {
       List<ScriptedPest> copied = [..._pestsForNow];
 
-      sciptedPests.removeWhere((element) => copied.map((e) => e.pest.id).contains(element.pest.id));
+      sciptedPests.removeWhere((element) => copied.map((e) => e.id).contains(element.id));
 
       for (var scriptedPest in copied) {
         _sendPestAtRow(
-          pest: scriptedPest.pest,
+          pestType: scriptedPest.type,
           row: scriptedPest.row,
         );
       }
     }
   }
 
-  void _sendPestAtRow({required Pest pest, required int row}) {
+  void _sendPestAtRow({required PestType pestType, required int row}) {
     if (!isMounted) {
       return;
     }
@@ -90,7 +91,13 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
       return;
     }
 
-    pest.position = Vector2(size.x - game.blockSize, row * game.blockSize);
+    final pest = Pest(
+      type: pestType,
+      position: Vector2(
+        size.x - game.blockSize,
+        row * game.blockSize,
+      ),
+    );
 
     add(pest);
 
