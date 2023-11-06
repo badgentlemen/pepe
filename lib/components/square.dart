@@ -25,7 +25,7 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<P2PGame> {
 
   bool get canBuy => game.level == null ? false : game.level!.sunPower >= plantType.price;
 
-  bool get canPlant => _plant == null && canBuy;
+  bool get canPlant => _plant == null && canBuy && game.level?.isCompleted == false;
 
   @override
   void onTapUp(TapUpEvent event) {
@@ -53,11 +53,7 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<P2PGame> {
   }
 
   void _addPlant() {
-    if (game.level == null) {
-      return;
-    }
-
-    if (!canPlant) {
+    if (game.level == null || !game.level!.isCompleted || !canPlant) {
       return;
     }
 
@@ -69,7 +65,7 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<P2PGame> {
   }
 
   void _removePlant() {
-    if (_plant == null || game.level == null) {
+    if (_plant == null || game.level == null || !game.level!.isCompleted) {
       return;
     }
 

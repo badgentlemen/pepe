@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:pepe/components/aiplane_card.dart';
 import 'package:pepe/components/airplane.dart';
+import 'package:pepe/components/background.dart';
 import 'package:pepe/components/bolt.dart';
 import 'package:pepe/components/cloud.dart';
 import 'package:pepe/components/field.dart';
@@ -100,7 +101,7 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
   bool get isWin => allEnemiesDead && !pestReachedBorder;
 
   /// Уровень окончен
-  bool get isCompleted => allEnemiesDead || pestReachedBorder;
+  bool get isCompleted => true; //allEnemiesDead || pestReachedBorder;
 
   late Label powerLabel;
 
@@ -125,7 +126,14 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
     add(pestsKilledRemainingLabel);
 
     try {
-      _addHill();
+      add(
+        Background(
+          tileType: script.tileType,
+        ),
+      );
+
+      /// Можно потом вернуть
+      // _addHill();
       _addSolars();
       _addField();
       _addPrimarySun();
@@ -158,14 +166,14 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
   }
 
   /// ADD COMPONENTS
-  void _addHill() {
-    add(SpriteComponent(
-      sprite: Sprite(game.images.fromCache('hill.png')),
-      position: Vector2(-2, game.size.y - 170),
-      size: Vector2(game.size.x + 2, (game.size.x + 2) / fieldAssetRatio),
-      priority: 0,
-    ));
-  }
+  // void _addHill() {
+  //   add(SpriteComponent(
+  //     sprite: Sprite(game.images.fromCache('hill.png')),
+  //     position: Vector2(-2, game.size.y - 170),
+  //     size: Vector2(game.size.x + 2, (game.size.x + 2) / fieldAssetRatio),
+  //     priority: 0,
+  //   ));
+  // }
 
   void _addGenerator() {
     add(
