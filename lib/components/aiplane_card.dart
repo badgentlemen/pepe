@@ -124,15 +124,22 @@ class AirplaneCard extends RectangleComponent with TapCallbacks, HasGameRef<P2PG
   }
 
   Future<void> _handleTapped() async {
-    if (isMounted && game.buildContext != null && canSend) {
-      final result = await FlutterPlatformAlert.showAlert(
-        windowTitle: 'Отправить самолет с "${type.title}"',
-        text: '',
-        alertStyle: AlertButtonStyle.okCancel,
-      );
+    if (isMounted && game.buildContext != null) {
+      if (canSend) {
+        final result = await FlutterPlatformAlert.showAlert(
+          windowTitle: 'Отправить самолет с "${type.title}"',
+          text: '',
+          alertStyle: AlertButtonStyle.okCancel,
+        );
 
-      if (result == AlertButton.okButton) {
-        game.level?.sendPlane(type);
+        if (result == AlertButton.okButton) {
+          game.level?.sendPlane(type);
+        }
+      } else {
+        await FlutterPlatformAlert.showAlert(
+          windowTitle: 'Недостаточно средств',
+          text: 'Для отправки самолета "${type.title}" нужно ${type.price} энергии',
+        );
       }
     }
   }
