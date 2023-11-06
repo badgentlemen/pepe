@@ -31,6 +31,9 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
   /// Частота удара + стрельбы
   double get fireFrequency => type.fireFrequencySec;
 
+  /// Имеет возможность стрелять
+  bool get canFire => _hasGrown;
+
   /// Интервал для стрельбы
   Timer? _movingTimer;
 
@@ -39,10 +42,11 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
   /// Выросло ли растение
   bool _hasGrown = false;
 
+  /// Здоровье
   int _currentHealth = 0;
 
-  /// Имеет возможность стрелять
-  bool get canFire => _hasGrown;
+  ///
+  bool hasManureEffect = false;
 
   HealthIndicator? _healthIndicator;
 
@@ -83,6 +87,20 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
     }
 
     super.onCollisionEnd(other);
+  }
+
+  Future<void> buff() async {
+    if (hasManureEffect) {
+      return;
+    }
+
+    hasManureEffect = true;
+    _movingTimer?.limit = fireFrequency / 3;
+
+    await Future.delayed(const Duration(seconds: 10));
+
+    _movingTimer?.limit = fireFrequency;
+    hasManureEffect = false;
   }
 
   void _disposePestEffectTimer() {

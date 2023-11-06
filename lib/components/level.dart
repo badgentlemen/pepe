@@ -11,6 +11,7 @@ import 'package:pepe/components/field.dart';
 import 'package:pepe/components/flame_text.dart';
 import 'package:pepe/components/label.dart';
 import 'package:pepe/components/pest.dart';
+import 'package:pepe/components/plant.dart';
 import 'package:pepe/components/plant_card.dart';
 import 'package:pepe/components/primary_sun.dart';
 import 'package:pepe/components/solar_panel.dart';
@@ -50,6 +51,8 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
 
   /// Список вредителей на игральной доске
   List<Pest> pests = [];
+
+  List<Plant> plants = [];
 
   int killedPests = 0;
 
@@ -268,12 +271,20 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
     pests.add(pest);
   }
 
+  void onPlantAdd(Plant plant) {
+    reduceSunPower(plant.price);
+    plants.add(plant);
+  }
+
   void sendPlane(AirplaneType type) {
     if (!canSendPlane(type)) {
       return;
     }
 
-    final airplane = Airplane(type: type, width: game.blockSize * 1.4,);
+    final airplane = Airplane(
+      type: type,
+      width: game.blockSize * 1.4,
+    );
     add(airplane);
 
     switch (type) {
@@ -294,11 +305,11 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
     /// some delay before apply
     await Future.delayed(const Duration(milliseconds: 1200));
 
+    reduceElectricity(AirplaneType.chemical.price);
+
     for (var pest in pests) {
       pest.handleChemicalDamage();
     }
-
-    reduceElectricity(AirplaneType.chemical.price);
   }
 
   Future<void> _applyManure() async {
@@ -306,9 +317,14 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
       return;
     }
 
-    // reduceElectricity(AirplaneType.chemical.price);
-  }
+    await Future.delayed(const Duration(milliseconds: 1200));
 
+    reduceElectricity(AirplaneType.chemical.price);
+
+    for (var plant in plants) {
+      plant.buff();
+    }
+  }
 
   void increaseSunPower(int other) {
     sunPower += other;

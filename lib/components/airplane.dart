@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:pepe/components/airplane_sprite.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/models/airplane_type.dart';
+import 'package:pepe/utils.dart';
 
 class Airplane extends AirplaneSprite {
   Airplane({
@@ -17,7 +18,8 @@ class Airplane extends AirplaneSprite {
 
   @override
   Future<void> onLoad() async {
-    position = Vector2(game.dashboardPosition.x, game.skyPosition.y + game.blockSize);
+    position = Vector2(
+        game.dashboardPosition.x, game.skyPosition.y + random(game.blockSize.toInt(), game.blockSize.toInt() + 20));
     return super.onLoad();
   }
 
@@ -25,11 +27,11 @@ class Airplane extends AirplaneSprite {
   void update(double dt) {
     _fly();
     super.update(dt);
-}
+  }
 
   void _fly() {
     if (position.x <= _distance) {
-      position.x += 7;
+      position.x += 6;
     }
 
     if (position.x > _distance) {
