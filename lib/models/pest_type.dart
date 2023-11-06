@@ -1,24 +1,30 @@
 import 'package:flame/components.dart';
 
 enum PestType {
+  /// Кролик
   bunny,
+
+  /// Слизень
   slime,
+
+  /// Поросенок
   pig,
 }
 
 extension PestTypeExt on PestType {
-
-  int get damageFromChemical {
+  // Процент здоровья которое теряет вредитель от применения химикатов
+  int get chemicalPercentHit {
     switch (this) {
       case PestType.bunny:
-        return 85;
+        return 20;
       case PestType.slime:
-        return 55;
+        return 25;
       case PestType.pig:
-        return 35;
+        return 30;
     }
   }
 
+  /// Вознаграждение за уничтожение
   int get reward {
     switch (this) {
       case PestType.bunny:
@@ -30,6 +36,7 @@ extension PestTypeExt on PestType {
     }
   }
 
+  /// Наносимый урон
   int get damage {
     switch (this) {
       case PestType.bunny:
@@ -41,16 +48,17 @@ extension PestTypeExt on PestType {
     }
   }
 
+  /// Длительность анимации получения урона
   int get hitAnimationAmount {
     switch (this) {
       case PestType.bunny:
       case PestType.pig:
-        return 5;
       case PestType.slime:
         return 5;
     }
   }
 
+  /// Длительность анимации бега
   int get runAnimationAmount {
     switch (this) {
       case PestType.bunny:
@@ -61,6 +69,7 @@ extension PestTypeExt on PestType {
     }
   }
 
+  /// Процент уклонения от пули (пока не применяется на химикаты)
   int get dodgePercent {
     switch (this) {
       case PestType.bunny:
@@ -72,6 +81,7 @@ extension PestTypeExt on PestType {
     }
   }
 
+  /// Название вредителя
   String get title {
     switch (this) {
       case PestType.bunny:
@@ -83,6 +93,7 @@ extension PestTypeExt on PestType {
     }
   }
 
+  /// Изначальное здоровье
   int get health {
     switch (this) {
       case PestType.bunny:
@@ -94,6 +105,7 @@ extension PestTypeExt on PestType {
     }
   }
 
+  /// Размер спрайта вредителя в файлах /assets/images/
   Vector2 get spriteSize {
     switch (this) {
       case PestType.bunny:

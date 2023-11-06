@@ -173,7 +173,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   }
 
   void handleChemicalDamage() {
-    final damage = _currentHealth / 3;
+    final damage = (_currentHealth * type.chemicalPercentHit) / 100;
     _handleDamage(damage);
   }
 
