@@ -20,7 +20,7 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
   Timer? _timer;
 
   List<ScriptedPest> get _pestsForNow =>
-      sciptedPests.where((sciptedPest) => sciptedPest.delayDurationSec == game.level?.startedDateTimeSec).toList();
+      sciptedPests.where((sciptedPest) => sciptedPest.delayDurationSec == game.level?.completedDurationSec).toList();
 
   @override
   FutureOr<void> onLoad() {
@@ -70,6 +70,14 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
   }
 
   void _sendPestAtRow({required Pest pest, required int row}) {
+    if (game.level == null) {
+      return;
+    }
+
+    if (game.level!.isCompleted) {
+      return;
+    }
+
     pest.position = Vector2(size.x - game.blockSize, row * game.blockSize);
 
     add(pest);

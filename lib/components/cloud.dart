@@ -42,6 +42,10 @@ class Cloud extends SpriteComponent with HasGameRef<P2PGame> {
   }
 
   void _move() {
+    if (game.level?.isCompleted == true) {
+      return;
+    }
+
     position.x += 1;
 
     if (position.x >= game.size.x) {

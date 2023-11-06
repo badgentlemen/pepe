@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:pepe/p2p_game.dart';
 
+
 class FlameText extends TextComponent with HasGameRef<P2PGame> {
   FlameText({
     super.position,
@@ -21,14 +22,7 @@ class FlameText extends TextComponent with HasGameRef<P2PGame> {
 
   @override
   FutureOr<void> onLoad() {
-    textRenderer = TextPaint(
-      style: TextStyle(
-        color: color,
-        fontWeight: FontWeight.w900,
-        fontSize: 16,
-        height: 1,
-      ).copyWith(color: color),
-    );
+    textRenderer = TextPaint(style: textStyle.copyWith(color: color));
 
     return super.onLoad();
   }

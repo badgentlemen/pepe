@@ -173,6 +173,14 @@ class Plant extends SpriteComponent with HasGameRef<P2PGame>, CollisionCallbacks
   }
 
   void _fire() {
+    if (game.level == null) {
+      return;
+    }
+
+    if (game.level!.isCompleted) {
+      return;
+    }
+
     if (isMounted && canFire) {
       final bullet = Bullet(
         position: Vector2(game.blockSize, game.blockSize / 2 - bulletRadius),

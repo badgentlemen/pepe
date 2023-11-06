@@ -46,7 +46,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   /// Наносимый урон
   int get damage => type.damage;
 
-  bool get isStopped => position.x <= 0 || _isEffectWithPlant;
+  bool get isStopped => game.level == null ? true : position.x <= 0 || _isEffectWithPlant || game.level!.isCompleted;
 
   bool _isEffectWithPlant = false;
 
@@ -84,9 +84,12 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
   @override
   void update(double dt) {
-    _movingTimer?.update(dt);
-    _plantEffectTimer?.update(dt);
-    _healthIndicator.updateData(max: health, value: _currentHealth);
+    if (game.level?.isCompleted != true) {
+      _movingTimer?.update(dt);
+      _plantEffectTimer?.update(dt);
+      _healthIndicator.updateData(max: health, value: _currentHealth);
+    }
+
     super.update(dt);
   }
 
