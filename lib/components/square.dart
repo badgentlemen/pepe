@@ -27,19 +27,23 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<P2PGame> {
 
   bool get canPlant => _plant == null && canBuy && game.level?.isCompleted == false;
 
+  bool get canRemove => _plant != null && game.level?.isCompleted == false;
+
   @override
   void onTapUp(TapUpEvent event) {
-    if (_plant == null) {
-      _addPlant();
-    } else {
-      _handleRemovePlant();
+    if (game.level?.isCompleted == false) {
+      if (_plant == null) {
+        _addPlant();
+      } else {
+        _handleRemovePlant();
+      }
     }
 
     super.onTapUp(event);
   }
 
   Future<void> _handleRemovePlant() async {
-    if (isMounted && game.buildContext != null && _plant != null) {
+    if (isMounted && canRemove) {
       final result = await FlutterPlatformAlert.showAlert(
         windowTitle: 'Удалить растение?',
         text: 'Стоимость растения вернется, но снаряды исчезнут',
@@ -53,7 +57,7 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<P2PGame> {
   }
 
   void _addPlant() {
-    if (game.level == null || !game.level!.isCompleted || !canPlant) {
+    if (!canPlant) {
       return;
     }
 
@@ -65,7 +69,7 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<P2PGame> {
   }
 
   void _removePlant() {
-    if (_plant == null || game.level == null || !game.level!.isCompleted) {
+    if (!canRemove) {
       return;
     }
 
