@@ -67,6 +67,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
 
   @override
   FutureOr<void> onLoad() async {
+
     try {
       await images.loadAllImages();
     } catch (e) {
