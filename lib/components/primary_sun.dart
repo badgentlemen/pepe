@@ -8,7 +8,10 @@ import 'package:pepe/components/sun.dart';
 class PrimarySun extends Sun with CollisionCallbacks {
   PrimarySun() : super(position: Vector2.zero(), size: Vector2.zero());
 
-  static const double delay = 7;
+  static const double delay = 4.5;
+  static const double fps = 0.05;
+
+  bool _isLeftVelocity = true;
 
   Timer? _timer;
 
@@ -18,6 +21,13 @@ class PrimarySun extends Sun with CollisionCallbacks {
     size = game.primarySunSize;
 
     add(CircleHitbox());
+
+    _timer = Timer(
+      fps,
+      onTick: _move,
+      repeat: true,
+    );
+
     return super.onLoad();
   }
 
@@ -46,5 +56,27 @@ class PrimarySun extends Sun with CollisionCallbacks {
     }
 
     super.onCollisionEnd(other);
+  }
+
+  void _move() {
+    if (game.level?.isCompleted == true) {
+      return;
+    }
+
+    final step = (game.blockSize * 2) / (delay / fps);
+
+    if (_isLeftVelocity) {
+      position.x -= step;
+    } else {
+      position.x += step;
+    }
+
+    if (position.x < game.dashboardPosition.x) {
+      _isLeftVelocity = false;
+      flipHorizontallyAroundCenter();
+    } else if (position.x >= game.size.x) {
+      _isLeftVelocity = true;
+      flipHorizontallyAroundCenter();
+    }
   }
 }
