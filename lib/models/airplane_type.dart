@@ -14,9 +14,9 @@ extension AirplaneTypeExt on AirplaneType {
   int get price {
     switch (this) {
       case AirplaneType.chemical:
-        return 200;
+        return 150;
       case AirplaneType.manure:
-        return 200;
+        return 220;
     }
   }
 

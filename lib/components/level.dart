@@ -4,12 +4,14 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:pepe/components/aiplane_card.dart';
+import 'package:pepe/components/airplane.dart';
 import 'package:pepe/components/bolt.dart';
 import 'package:pepe/components/cloud.dart';
 import 'package:pepe/components/field.dart';
 import 'package:pepe/components/flame_text.dart';
 import 'package:pepe/components/label.dart';
 import 'package:pepe/components/pest.dart';
+import 'package:pepe/components/plant.dart';
 import 'package:pepe/components/plant_card.dart';
 import 'package:pepe/components/primary_sun.dart';
 import 'package:pepe/components/solar_panel.dart';
@@ -50,6 +52,8 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
   /// Список вредителей на игральной доске
   List<Pest> pests = [];
 
+  List<Plant> plants = [];
+
   int killedPests = 0;
 
   Timer? _cloudTimer;
@@ -69,7 +73,6 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
     startedDateTime = DateTime.now();
 
     dateLabel = FlameText(
-
       position: Vector2(width / 2, 10),
       size: Vector2(60, 20),
       color: Colors.black,
@@ -105,6 +108,8 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
     electricityLabel.text = electricity.toString();
     super.update(dt);
   }
+
+  bool canSendPlane(AirplaneType type) => electricity >= type.price;
 
   void _addHill() {
     add(SpriteComponent(
@@ -254,14 +259,71 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
     );
   }
 
-  void _addPrimarySun() {
-    add(PrimarySun());
-  }
+  void _addPrimarySun() => add(PrimarySun());
 
   void onPestKill(Pest pest) {
     killedPests += 1;
     increaseSunPower(pest.reward);
-    pests.removeWhere((pest) => pest.id == pest.id);
+    pests.removeWhere((element) => element.id == pest.id);
+  }
+
+  void onPestAdd(Pest pest) {
+    pests.add(pest);
+  }
+
+  void onPlantAdd(Plant plant) {
+    reduceSunPower(plant.price);
+    plants.add(plant);
+  }
+
+  void sendPlane(AirplaneType type) {
+    if (!canSendPlane(type)) {
+      return;
+    }
+
+    final airplane = Airplane(
+      type: type,
+      width: game.blockSize * 1.4,
+    );
+    add(airplane);
+
+    switch (type) {
+      case AirplaneType.chemical:
+        _applyChemicals();
+        break;
+      case AirplaneType.manure:
+        _applyManure();
+        break;
+    }
+  }
+
+  Future<void> _applyChemicals() async {
+    if (!canSendPlane(AirplaneType.chemical)) {
+      return;
+    }
+
+    /// some delay before apply
+    await Future.delayed(const Duration(milliseconds: 1200));
+
+    reduceElectricity(AirplaneType.chemical.price);
+
+    for (var pest in pests) {
+      pest.handleChemicalDamage();
+    }
+  }
+
+  Future<void> _applyManure() async {
+    if (!canSendPlane(AirplaneType.manure)) {
+      return;
+    }
+
+    await Future.delayed(const Duration(milliseconds: 1200));
+
+    reduceElectricity(AirplaneType.chemical.price);
+
+    for (var plant in plants) {
+      plant.buff();
+    }
   }
 
   void increaseSunPower(int other) {

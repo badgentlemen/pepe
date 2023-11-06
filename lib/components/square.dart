@@ -63,7 +63,7 @@ class Square extends SpriteComponent with TapCallbacks, HasGameRef<P2PGame> {
 
     _plant = Plant(plantType);
 
-    game.level!.reduceSunPower(_plant!.price);
+    game.level?.onPlantAdd(_plant!);
 
     add(_plant!);
   }

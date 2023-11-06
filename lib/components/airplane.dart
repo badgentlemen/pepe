@@ -1,20 +1,38 @@
-import 'dart:async';
-
 import 'package:flame/components.dart';
-import 'package:pepe/constants.dart';
-import 'package:pepe/p2p_game.dart';
+import 'package:pepe/components/airplane_sprite.dart';
+import 'package:pepe/models/airplane_type.dart';
+import 'package:pepe/utils.dart';
 
+class Airplane extends AirplaneSprite {
+  Airplane({
+    required this.type,
+    required super.width,
+  });
 
+  final AirplaneType type;
 
-class Airplane extends SpriteComponent with HasGameRef<P2PGame> {
-  Airplane({super.position, required double width})
-      : super(
-          size: Vector2(width, width / airplaneAssetRatio),
-        );
+  double get _distance => game.size.x + width;
 
   @override
-  FutureOr<void> onLoad() {
-    sprite = Sprite(game.images.fromCache('plane.png'));
+  Future<void> onLoad() async {
+    position = Vector2(
+        game.dashboardPosition.x, game.skyPosition.y + random(game.blockSize.toInt(), game.blockSize.toInt() + 20));
     return super.onLoad();
+  }
+
+  @override
+  void update(double dt) {
+    _fly();
+    super.update(dt);
+  }
+
+  void _fly() {
+    if (position.x <= _distance) {
+      position.x += 6;
+    }
+
+    if (position.x > _distance) {
+      removeFromParent();
+    }
   }
 }

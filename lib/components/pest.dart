@@ -54,7 +54,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
   Timer? _plantEffectTimer;
 
-  int _currentHealth = 0;
+  double _currentHealth = 0.0;
 
   final List<String> _dodgedBullets = [];
 
@@ -62,7 +62,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
   @override
   FutureOr<void> onLoad() {
-    _currentHealth = health;
+    _currentHealth = health.toDouble();
 
     size = Vector2(game.blockSize, game.blockSize);
 
@@ -172,13 +172,18 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
     current = PestAnimationType.run;
   }
 
-  void _handleDamage(int damage) {
-    if (health > 0) {
+  void handleChemicalDamage() {
+    final damage = (_currentHealth * type.chemicalPercentHit) / 100;
+    _handleDamage(damage);
+  }
+
+  void _handleDamage(num damage) {
+    if (_currentHealth > 1) {
       _currentHealth = _currentHealth - damage;
       _onHit();
     }
 
-    if (_currentHealth <= 0) {
+    if (_currentHealth < 1) {
       _destroy();
     }
   }

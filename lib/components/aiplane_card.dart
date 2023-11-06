@@ -4,7 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
-import 'package:pepe/components/airplane.dart';
+import 'package:pepe/components/airplane_sprite.dart';
 import 'package:pepe/components/bolt.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/models/airplane_type.dart';
@@ -23,7 +23,7 @@ class AirplaneCard extends RectangleComponent with TapCallbacks, HasGameRef<P2PG
 
   double get _boltSpace => 3;
 
-  bool get canSend => game.level != null ? game.level!.electricity >= type.price : false;
+  bool get canSend => game.level?.canSendPlane(type) ?? false;
 
   TextStyle get _titleTextStyle => TextStyle(
         fontWeight: FontWeight.w900,
@@ -78,7 +78,7 @@ class AirplaneCard extends RectangleComponent with TapCallbacks, HasGameRef<P2PG
   }
 
   _addAiplane() {
-    final aiplane = Airplane(
+    final aiplane = AirplaneSprite(
       width: width * .7,
     );
 
@@ -124,15 +124,22 @@ class AirplaneCard extends RectangleComponent with TapCallbacks, HasGameRef<P2PG
   }
 
   Future<void> _handleTapped() async {
-    if (isMounted && game.buildContext != null && canSend) {
-      final result = await FlutterPlatformAlert.showAlert(
-        windowTitle: 'Отправить самолет с "${type.title}"',
-        text: '',
-        alertStyle: AlertButtonStyle.okCancel,
-      );
+    if (isMounted && game.buildContext != null) {
+      if (canSend) {
+        final result = await FlutterPlatformAlert.showAlert(
+          windowTitle: 'Отправить самолет с "${type.title}"',
+          text: '',
+          alertStyle: AlertButtonStyle.okCancel,
+        );
 
-      if (result == AlertButton.okButton) {
-        print('отправляем. вжжжжж');
+        if (result == AlertButton.okButton) {
+          game.level?.sendPlane(type);
+        }
+      } else {
+        await FlutterPlatformAlert.showAlert(
+          windowTitle: 'Недостаточно средств',
+          text: 'Для отправки самолета "${type.title}" нужно ${type.price} энергии',
+        );
       }
     }
   }
