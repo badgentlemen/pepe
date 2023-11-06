@@ -72,8 +72,9 @@ class Field extends RectangleComponent with HasGameRef<P2PGame>, CollisionCallba
   void _sendPestAtRow({required Pest pest, required int row}) {
     pest.position = Vector2(size.x - game.blockSize, row * game.blockSize);
 
-    game.level?.pests.add(pest);
     add(pest);
+
+    game.level?.onPestAdd(pest);
   }
 
   void _addFences() {

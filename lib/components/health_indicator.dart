@@ -35,7 +35,7 @@ class HealthIndicator extends RectangleComponent with HasGameRef<P2PGame> {
     fontSize: 15,
   );
 
-  String get _text => currentValue.toString();
+  String get _text => currentValue.toDouble().toStringAsFixed(0);
 
   Size get textSize => fetchTextSizeByStyle(_text, textStyle);
 

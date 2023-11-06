@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-const defaultSunPower = 100;
-const defaultElectricity = 100;
+const defaultSunPower = 250;
+const defaultElectricity = 250;
 const defaultLevelDuration = Duration(minutes: 2, seconds: 30);
 
 const defaultPestValue = 60;
@@ -17,7 +17,7 @@ const double bulletRadius = 8;
 
 const blockSizeImpl = 23;
 const int fieldRows = 7;
-const int fieldColumns = 16;
+const int fieldColumns = 18;
 const int solarPanels = 3;
 const int windTurbines = 3;
 

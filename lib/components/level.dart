@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:pepe/components/aiplane_card.dart';
+import 'package:pepe/components/airplane.dart';
 import 'package:pepe/components/bolt.dart';
 import 'package:pepe/components/cloud.dart';
 import 'package:pepe/components/field.dart';
@@ -69,7 +70,6 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
     startedDateTime = DateTime.now();
 
     dateLabel = FlameText(
-
       position: Vector2(width / 2, 10),
       size: Vector2(60, 20),
       color: Colors.black,
@@ -105,6 +105,8 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
     electricityLabel.text = electricity.toString();
     super.update(dt);
   }
+
+  bool canSendPlane(AirplaneType type) => electricity >= type.price;
 
   void _addHill() {
     add(SpriteComponent(
@@ -254,15 +256,59 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
     );
   }
 
-  void _addPrimarySun() {
-    add(PrimarySun());
-  }
+  void _addPrimarySun() => add(PrimarySun());
 
   void onPestKill(Pest pest) {
     killedPests += 1;
     increaseSunPower(pest.reward);
-    pests.removeWhere((pest) => pest.id == pest.id);
+    pests.removeWhere((element) => element.id == pest.id);
   }
+
+  void onPestAdd(Pest pest) {
+    pests.add(pest);
+  }
+
+  void sendPlane(AirplaneType type) {
+    if (!canSendPlane(type)) {
+      return;
+    }
+
+    final airplane = Airplane(type: type, width: game.blockSize * 1.4,);
+    add(airplane);
+
+    switch (type) {
+      case AirplaneType.chemical:
+        _applyChemicals();
+        break;
+      case AirplaneType.manure:
+        _applyManure();
+        break;
+    }
+  }
+
+  Future<void> _applyChemicals() async {
+    if (!canSendPlane(AirplaneType.chemical)) {
+      return;
+    }
+
+    /// some delay before apply
+    await Future.delayed(const Duration(milliseconds: 1200));
+
+    for (var pest in pests) {
+      pest.handleChemicalDamage();
+    }
+
+    reduceElectricity(AirplaneType.chemical.price);
+  }
+
+  Future<void> _applyManure() async {
+    if (!canSendPlane(AirplaneType.manure)) {
+      return;
+    }
+
+    // reduceElectricity(AirplaneType.chemical.price);
+  }
+
 
   void increaseSunPower(int other) {
     sunPower += other;

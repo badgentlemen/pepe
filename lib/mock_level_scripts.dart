@@ -4,8 +4,8 @@ import 'package:pepe/models/pest_type.dart';
 import 'package:pepe/models/scripted_pest.dart';
 
 final firstLevelScript = LevelScript(
-  sunPower: 200,
-  electricity: 200,
+  sunPower: 300,
+  electricity: 300,
   scriptedPests: [
     ScriptedPest(
       pest: Pest(type: PestType.pig),
@@ -21,6 +21,16 @@ final firstLevelScript = LevelScript(
       pest: Pest(type: PestType.slime),
       delayDuration: const Duration(seconds: 40),
       row: 4,
+    ),
+    ScriptedPest(
+      pest: Pest(type: PestType.pig),
+      delayDuration: const Duration(seconds: 70),
+      row: 4,
+    ),
+     ScriptedPest(
+      pest: Pest(type: PestType.pig),
+      delayDuration: const Duration(seconds: 75),
+      row: 0,
     ),
     ScriptedPest(
       pest: Pest(type: PestType.pig),
