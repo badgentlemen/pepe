@@ -101,7 +101,7 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
   bool get isWin => allEnemiesDead && !pestReachedBorder;
 
   /// Уровень окончен
-  bool get isCompleted => true; //allEnemiesDead || pestReachedBorder;
+  bool get isCompleted => allEnemiesDead || pestReachedBorder;
 
   late Label powerLabel;
 
