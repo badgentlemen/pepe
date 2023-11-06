@@ -148,10 +148,11 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
   void update(double dt) {
     if (!isCompleted) {
       _cloudTimer?.update(dt);
-      powerLabel.text = sunPower.toString();
-      electricityLabel.text = electricity.toString();
-      _updateKilledPestsRemainingLabel();
     }
+
+    powerLabel.text = sunPower.toString();
+    electricityLabel.text = electricity.toString();
+    _updateKilledPestsRemainingLabel();
 
     super.update(dt);
   }
@@ -333,12 +334,8 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
       );
 
       /// TODO: обработка перехода на следующий уровень
-      if (result == AlertButton.okButton) {
-
-      } {
-
-      }
-
+      if (result == AlertButton.okButton) {}
+      {}
     } else {
       FlutterPlatformAlert.showAlert(
         windowTitle: 'ВЫ ПРОИГРАЛИ',
