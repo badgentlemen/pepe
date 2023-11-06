@@ -1,6 +1,5 @@
 import 'package:flame/components.dart';
 import 'package:pepe/components/airplane_sprite.dart';
-import 'package:pepe/constants.dart';
 import 'package:pepe/models/airplane_type.dart';
 import 'package:pepe/utils.dart';
 
@@ -11,8 +10,6 @@ class Airplane extends AirplaneSprite {
   });
 
   final AirplaneType type;
-
-  double get _timeInCloudsSec => 3;
 
   double get _distance => game.size.x + width;
 
