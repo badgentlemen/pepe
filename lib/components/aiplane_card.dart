@@ -58,18 +58,22 @@ class AirplaneCard extends RectangleComponent with TapCallbacks, HasGameRef<P2PG
   FutureOr<void> onLoad() {
     size = Vector2(game.cardsWidth, game.cardsHeight);
 
-    paintLayers = [
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..color = Colors.orange
-        ..strokeWidth = 1,
-    ];
-
     _addAiplane();
     _addTitle();
     _addPrice();
 
     return super.onLoad();
+  }
+
+  @override
+  void update(double dt) {
+    paintLayers = [
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..color = canSend ? Colors.blue : Colors.orange
+        ..strokeWidth = 2,
+    ];
+    super.update(dt);
   }
 
   @override

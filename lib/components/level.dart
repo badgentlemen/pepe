@@ -423,10 +423,11 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
       return;
     }
 
+    reduceElectricity(AirplaneType.chemical.price);
+
     /// some delay before apply
     await Future.delayed(const Duration(milliseconds: 1200));
 
-    reduceElectricity(AirplaneType.chemical.price);
 
     for (var pest in pests) {
       pest.handleChemicalDamage();
@@ -442,9 +443,9 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
       return;
     }
 
-    await Future.delayed(const Duration(milliseconds: 1200));
-
     reduceElectricity(AirplaneType.chemical.price);
+
+    await Future.delayed(const Duration(milliseconds: 1200));
 
     for (var plant in plants) {
       plant.buff();
