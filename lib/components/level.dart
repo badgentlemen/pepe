@@ -342,7 +342,6 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
         alertStyle: game.hasNext ? AlertButtonStyle.okCancel : AlertButtonStyle.ok,
       );
 
-      /// TODO: обработка перехода на следующий уровень
       if (result == AlertButton.okButton) {
         if (game.hasNext) {
           game.runNextLevel();
@@ -351,10 +350,12 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
         }
       }
     } else {
-      FlutterPlatformAlert.showAlert(
+      await FlutterPlatformAlert.showAlert(
         windowTitle: 'ВЫ ПРОИГРАЛИ',
         text: 'Один или несколько вредителей прошли поле',
       );
+
+      game.openMenu();
     }
   }
 
