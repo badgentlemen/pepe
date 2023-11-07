@@ -52,7 +52,7 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
 
   double get timingWidth => size.x / 4;
 
-  bool get hasNext => false;
+  bool get hasNext => _nextLevel != null;
 
   List<Level> _presetLevels = [];
 
@@ -62,12 +62,19 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
 
   int _index = 0;
 
+  Level? get _nextLevel {
+    try {
+      return _presetLevels[_index + 1];
+    } catch (e) {
+      return null;
+    }
+  }
+
   @override
   Color backgroundColor() => Colors.transparent;
 
   @override
   FutureOr<void> onLoad() async {
-
     try {
       await images.loadAllImages();
     } catch (e) {
@@ -75,8 +82,8 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
     }
 
     _presetLevels = [
-      Level(script: firstLevelScript),
-      Level(script: secondLevelScript),
+      Level(script: firstLevelSetting),
+      Level(script: secondLevelSetting),
     ];
 
     _runLevelAt(0);
@@ -84,7 +91,19 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
     return super.onLoad();
   }
 
-  void _runNextLevel() {}
+  void runNextLevel() {
+    if (_nextLevel != null) {
+      _runLevelAt(_index + 1);
+    }
+  }
+
+  void openMenu() {
+    for (var level in _presetLevels) {
+      level.removeFromParent();
+    }
+
+    _index = 0;
+  }
 
   void _runLevelAt(int index) {
     level?.removeFromParent();
@@ -93,6 +112,8 @@ class P2PGame extends FlameGame with TapCallbacks, HasCollisionDetection, HasDra
       level = _presetLevels[index];
       _index = index;
       add(level!);
-    } catch (e) {}
+    } catch (e) {
+      openMenu();
+    }
   }
 }

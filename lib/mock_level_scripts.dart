@@ -1,8 +1,47 @@
-import 'package:pepe/models/level_script.dart';
+import 'package:pepe/models/bg_tile_type.dart';
+import 'package:pepe/models/level_setting.dart';
 import 'package:pepe/models/pest_type.dart';
 import 'package:pepe/models/scripted_pest.dart';
 
-final firstLevelScript = LevelScript(
+final firstLevelSetting = LevelSetting(
+  sunPower: 500,
+  electricity: 500,
+  tileType: BackgroundTileType.yellow,
+  scriptedPests: [
+    ScriptedPest(
+      type: PestType.pig,
+      onTime: const Duration(seconds: 1),
+      row: 0,
+    ),
+    ScriptedPest(
+      type: PestType.slime,
+      onTime: const Duration(seconds: 5),
+      row: 0,
+    ),
+    ScriptedPest(
+      type: PestType.slime,
+      onTime: const Duration(seconds: 15),
+      row: 4,
+    ),
+    ScriptedPest(
+      type: PestType.pig,
+      onTime: const Duration(seconds: 30),
+      row: 4,
+    ),
+    ScriptedPest(
+      type: PestType.pig,
+      onTime: const Duration(seconds: 40),
+      row: 0,
+    ),
+    ScriptedPest(
+      type: PestType.pig,
+      onTime: const Duration(seconds: 45),
+      row: 3,
+    ),
+  ],
+);
+
+final secondLevelSetting = LevelSetting(
   sunPower: 300,
   electricity: 300,
   scriptedPests: [
@@ -26,7 +65,7 @@ final firstLevelScript = LevelScript(
       onTime: const Duration(seconds: 70),
       row: 4,
     ),
-     ScriptedPest(
+    ScriptedPest(
       type: PestType.pig,
       onTime: const Duration(seconds: 75),
       row: 0,
@@ -128,7 +167,3 @@ final firstLevelScript = LevelScript(
     ),
   ],
 );
-
-final secondLevelScript = LevelScript(
-    // scriptedPests: List.generate((defaultLevelDuration.inSeconds / 30).floor(), (index) => null)
-    );

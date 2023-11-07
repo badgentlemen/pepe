@@ -3,8 +3,8 @@ import 'package:pepe/models/bg_tile_type.dart';
 import 'package:pepe/models/random_range.dart';
 import 'package:pepe/models/scripted_pest.dart';
 
-class LevelScript {
-  LevelScript({
+class LevelSetting {
+  LevelSetting({
     this.scriptedPests = const [],
     this.electricity = defaultElectricity,
     this.sunPower = defaultSunPower,

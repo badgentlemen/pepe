@@ -21,7 +21,7 @@ import 'package:pepe/components/sun.dart';
 import 'package:pepe/components/wind_turbine.dart';
 import 'package:pepe/constants.dart';
 import 'package:pepe/models/airplane_type.dart';
-import 'package:pepe/models/level_script.dart';
+import 'package:pepe/models/level_setting.dart';
 import 'package:pepe/models/plant_type.dart';
 import 'package:pepe/p2p_game.dart';
 import 'package:pepe/utils.dart';
@@ -39,7 +39,7 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
   final String id;
 
   /// Скрипт уровня
-  final LevelScript script;
+  final LevelSetting script;
 
   /// Собранная сила солнца
   int sunPower = 0;
@@ -331,19 +331,25 @@ class Level extends RectangleComponent with HasGameRef<P2PGame> {
 
   Future<void> _checkGameCompleted() async {
     if (!isCompleted) {
-      return;
+    return;
     }
 
     if (isWin) {
+
       final result = await FlutterPlatformAlert.showAlert(
         windowTitle: 'ВЫ ВЫИГРАЛИ',
-        text: 'Вы сумели защитить поле от вредителей. Продолжаем дальше?',
-        alertStyle: AlertButtonStyle.okCancel,
+        text: 'Вы сумели защитить поле от вредителей.${game.hasNext ? ' Продолжаем дальше?' : ''}',
+        alertStyle: game.hasNext ? AlertButtonStyle.okCancel : AlertButtonStyle.ok,
       );
 
       /// TODO: обработка перехода на следующий уровень
-      if (result == AlertButton.okButton) {}
-      {}
+      if (result == AlertButton.okButton) {
+        if (game.hasNext) {
+          game.runNextLevel();
+        } else {
+          game.openMenu();
+        }
+      }
     } else {
       FlutterPlatformAlert.showAlert(
         windowTitle: 'ВЫ ПРОИГРАЛИ',
