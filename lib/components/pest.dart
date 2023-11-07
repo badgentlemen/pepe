@@ -25,6 +25,8 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
   late SpriteAnimation _hitAnimation;
 
+  late SpriteAnimation _disappearingAnimation;
+
   /// Тип вредителя
   final PestType type;
 
@@ -60,6 +62,8 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
 
   late HealthIndicator _healthIndicator;
 
+  late RectangleHitbox _hitbox;
+
   @override
   FutureOr<void> onLoad() {
     _currentHealth = health.toDouble();
@@ -89,6 +93,12 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
       _plantEffectTimer?.update(dt);
       _healthIndicator.updateData(max: health, value: _currentHealth);
     }
+
+    if (_currentHealth <= 0) {
+      _healthIndicator.removeFromParent();
+    }
+
+    _healthIndicator.setOpacity(_currentHealth < 1 ? 0 : 1);
 
     super.update(dt);
   }
@@ -135,15 +145,15 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   }
 
   void _addHitbox() {
-    add(
-      RectangleHitbox(
-        position: Vector2(0, 0),
-        size: Vector2(
-          game.blockSize,
-          game.blockSize,
-        ),
+    _hitbox = RectangleHitbox(
+      position: Vector2(0, 0),
+      size: Vector2(
+        game.blockSize,
+        game.blockSize,
       ),
     );
+
+    add(_hitbox);
   }
 
   void _addHealthIndicator() {
@@ -175,9 +185,29 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   }
 
   Future<void> _onHit() async {
+    if (current == PestAnimationType.hit || current == PestAnimationType.disappearing) {
+      return;
+    }
+
     current = PestAnimationType.hit;
-    await Future.delayed(Duration(seconds: (pestFps / type.hitAnimationAmount).floor()));
+    final delayInMs = (((pestFps / (1 / type.hitAnimationAmount)) * 1000)).floor();
+    await Future.delayed(Duration(milliseconds: delayInMs));
+
     current = PestAnimationType.run;
+  }
+
+  Future<void> _onDisappearing() async {
+    if (current == PestAnimationType.disappearing) {
+      return;
+    }
+
+    _hitbox.removeFromParent();
+
+    current = PestAnimationType.disappearing;
+    final delayInMs = (((pestFps / disappearingStepTime) * 1000)).floor();
+    await Future.delayed(Duration(milliseconds: delayInMs));
+
+    _destroy();
   }
 
   void handleChemicalDamage() {
@@ -191,8 +221,12 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
       _onHit();
     }
 
-    if (_currentHealth < 1) {
-      _destroy();
+    if (_currentHealth < 0) {
+      _currentHealth = 0;
+    }
+
+    if (_currentHealth == 0) {
+      _onDisappearing();
     }
   }
 
@@ -223,9 +257,19 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
       amount: type.hitAnimationAmount,
     );
 
+    _disappearingAnimation = SpriteAnimation.fromFrameData(
+      game.images.fromCache('disappearing.png'),
+      SpriteAnimationData.sequenced(
+        amount: disappearingAmount,
+        stepTime: disappearingStepTime,
+        textureSize: Vector2(96, 96),
+      ),
+    );
+
     animations = {
       PestAnimationType.run: _runAnimation,
       PestAnimationType.hit: _hitAnimation,
+      PestAnimationType.disappearing: _disappearingAnimation,
     };
 
     current = PestAnimationType.run;

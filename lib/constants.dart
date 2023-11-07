@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pepe/models/random_range.dart';
 
+const disappearingAmount = 7;
+const disappearingStepTime = 1 / disappearingAmount;
 const defaultSunPower = 250;
 const defaultElectricity = 250;
 const defaultLevelDuration = Duration(minutes: 2, seconds: 30);
