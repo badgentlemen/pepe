@@ -216,7 +216,7 @@ class Pest extends SpriteAnimationGroupComponent with HasGameRef<P2PGame>, Colli
   }
 
   void _handleDamage(num damage) {
-    if (_currentHealth >= 1) {
+    if (_currentHealth > 0) {
       _currentHealth = _currentHealth - damage;
       _onHit();
     }
